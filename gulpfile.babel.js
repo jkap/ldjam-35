@@ -83,5 +83,5 @@ gulp.task('clean', () =>
   del(path.join(paths.dist, '*')));
 
 gulp.task('build', (done) => {
-  runSeq('clean', ['buildimg', 'buildjs'], 'buildhtml', done);
+  runSeq('clean', ['buildimg', 'buildjs', 'buildhtml'], done);
 });
