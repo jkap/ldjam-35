@@ -86,6 +86,10 @@ gulp.task('clean', () => {
   del(path.join(paths.dist, '*'));
 });
 
+gulp.task('delLib', () => {
+  del(path.join(paths.dist, 'lib'));
+});
+
 gulp.task('build', (done) => {
-  runSeq('clean', ['buildimg', 'buildjs'], 'buildhtml', done);
+  runSeq('clean', ['buildimg', 'buildjs'], 'buildhtml', 'delLib', done);
 });
