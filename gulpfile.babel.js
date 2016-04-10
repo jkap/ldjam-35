@@ -18,13 +18,13 @@ const paths = {
   html: './src/*.html',
   img: './src/images/*',
   js: './src/**/*.js',
-  src: './src'
+  src: './src',
 };
 
 gulp.task('connect', () => {
   connect.server({
     root: paths.src,
-    livereload: true
+    livereload: true,
   });
 });
 
@@ -56,7 +56,7 @@ gulp.task('buildjs', () =>
     .pipe(jspm({
       selfExecutingBundle: true,
       minify: true,
-      skipSourceMaps: true
+      skipSourceMaps: true,
     }))
     .pipe(rename('app.min.js'))
     .pipe(gulp.dest(paths.dist)));
@@ -75,7 +75,7 @@ gulp.task('buildimg', () =>
     .pipe(imagemin({
       progressive: true,
       svgoPlugins: [{ removeViewBox: false }],
-      use: [pngquant()]
+      use: [pngquant()],
     }))
     .pipe(gulp.dest(path.join(paths.dist, 'images'))));
 
