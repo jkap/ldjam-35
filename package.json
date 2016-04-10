@@ -1,0 +1,29 @@
+{
+  "name": "ldjam-35",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jkap/ldjam-35.git"
+  },
+  "author": "",
+  "contributors": [
+    "Jenn Kaplan <me@jkap.io>",
+    "Jessica Hayley <hey@jayhay.me>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jkap/ldjam-35/issues"
+  },
+  "homepage": "https://github.com/jkap/ldjam-35#readme",
+  "dependencies": {
+    "phaser": "^2.4.6"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
