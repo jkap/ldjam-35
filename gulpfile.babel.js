@@ -15,7 +15,7 @@ import del from 'del';
 
 const paths = {
   dist: './dist',
-  html: './src/**/*.html',
+  html: './src/*.html',
   img: './src/images/*',
   js: './src/**/*.js',
   src: './src'
@@ -51,7 +51,7 @@ gulp.task('watch', () => {
 
 gulp.task('default', ['connect', 'watch']);
 
-gulp.task('buildjs', () => {
+gulp.task('buildjs', () =>
   gulp.src('./src/main.js')
     .pipe(jspm({
       selfExecutingBundle: true,
@@ -59,37 +59,29 @@ gulp.task('buildjs', () => {
       skipSourceMaps: true
     }))
     .pipe(rename('app.min.js'))
-    .pipe(gulp.dest(paths.dist));
-});
+    .pipe(gulp.dest(paths.dist)));
 
-gulp.task('buildhtml', () => {
+gulp.task('buildhtml', () =>
   gulp.src(paths.html)
     .pipe(replace('css/app.css', 'app.min.css'))
     .pipe(replace('lib/system.js', 'app.min.js'))
     .pipe(replace('<script src="config.js"></script>', ''))
     .pipe(replace("<script>System.import('main')</script>", ''))
     .pipe(htmlMin({ collapseWhitespace: true }))
-    .pipe(gulp.dest(paths.dist));
-});
+    .pipe(gulp.dest(paths.dist)));
 
-gulp.task('buildimg', () => {
+gulp.task('buildimg', () =>
   gulp.src(paths.img)
     .pipe(imagemin({
       progressive: true,
       svgoPlugins: [{ removeViewBox: false }],
       use: [pngquant()]
     }))
-    .pipe(gulp.dest(path.join(paths.dist, 'images')));
-});
+    .pipe(gulp.dest(path.join(paths.dist, 'images'))));
 
-gulp.task('clean', () => {
-  del(path.join(paths.dist, '*'));
-});
-
-gulp.task('delLib', () => {
-  del(path.join(paths.dist, 'lib'));
-});
+gulp.task('clean', () =>
+  del(path.join(paths.dist, '*')));
 
 gulp.task('build', (done) => {
-  runSeq('clean', ['buildimg', 'buildjs'], 'buildhtml', 'delLib', done);
+  runSeq('clean', ['buildimg', 'buildjs'], 'buildhtml', done);
 });
