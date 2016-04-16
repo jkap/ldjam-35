@@ -21,7 +21,9 @@ class GameState extends Phaser.State {
   }
 
   create() {
-    this.grid = new Grid(20, 20, 20, 0);
+    this.grid = new Grid(20, 20, 20, 10);
+    const gridSize = this.grid.getSize();
+    this.game.scale.setGameSize(gridSize.width, gridSize.height);
     this.headSprite = new HeadSprite(this.game, this.grid, 10, 10);
 
     // Find your friend <3
@@ -58,8 +60,8 @@ class GameState extends Phaser.State {
   }
 
   spawnFriend() {
-    const sx = this.game.rnd.integerInRange(0, this.grid.width);
-    const sy = this.game.rnd.integerInRange(0, this.grid.height);
+    const sx = this.game.rnd.integerInRange(0, this.grid.width - 1);
+    const sy = this.game.rnd.integerInRange(0, this.grid.height - 1);
 
     if (!this.curFriend) {
       this.curFriend = new PickUpFriendSprite(this.game, this.grid, sx, sy);

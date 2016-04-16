@@ -12,9 +12,10 @@ class Grid {
    * Returns the pixel position for the center of the given tile
    */
   gridToPixelPos(pos) {
+    const squarePlusSpace = this.squareSize + this.spacing;
     return {
-      x: pos.x * this.squareSize + this.squareSize / 2,
-      y: pos.y * this.squareSize + this.squareSize / 2,
+      x: pos.x * squarePlusSpace + squarePlusSpace / 2 + this.spacing,
+      y: pos.y * squarePlusSpace + squarePlusSpace / 2 + this.spacing,
     };
   }
 
@@ -23,6 +24,17 @@ class Grid {
    */
   outOfBounds(pos) {
     return pos.x >= this.width || pos.x < 0 || pos.y >= this.height || pos.y < 0;
+  }
+
+  /**
+   * Returns size in pixels
+   */
+  getSize() {
+    const squarePlusSpace = this.squareSize + this.spacing;
+    return {
+      width: this.width * squarePlusSpace + this.spacing * 2,
+      height: this.height * squarePlusSpace + this.spacing * 2,
+    };
   }
 }
 
