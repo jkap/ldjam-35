@@ -8,6 +8,10 @@ class Game extends Phaser.Game {
   constructor() {
     super(800, 600, Phaser.AUTO, '', GameState);
   }
+
+  advance(tweenTime) {
+
+  }
 }
 
 export { Game };
