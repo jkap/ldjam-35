@@ -7,7 +7,10 @@ import { Grid } from 'grid';
 
 class GameState extends Phaser.State {
   preload() {
+    this.load.image('circle', 'images/circle.png');
+    this.load.image('triangle', 'images/triangle.png');
     this.load.image('square', 'images/square.png');
+    this.load.image('star', 'images/star.png');
   }
 
   create() {
