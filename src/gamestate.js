@@ -3,7 +3,7 @@
 import { Phaser } from 'phaser';
 import { TrackManager } from './track-manager';
 
-import { Shape, Grid } from 'grid';
+import { Grid } from 'grid';
 import { GridEntity } from 'gridentity';
 
 import * as timeUtil from './time-util';
@@ -57,7 +57,6 @@ class GameState extends Phaser.State {
 
   advance() {
     this.enemy.advance();
-    console.log('beat');
   }
 
   playTrack(track) {

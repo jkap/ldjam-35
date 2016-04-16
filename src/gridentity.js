@@ -31,7 +31,6 @@ class GridEntity {
         graphics.drawCircle(pixpos.x, pixpos.y, size);
         break;
       default:
-        console.error('WHAT IS ' + this.grid.getShapeAt(this.pos));
         break;
     }
     graphics.endFill();
