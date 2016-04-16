@@ -24,6 +24,8 @@ class GridSprite extends Phaser.Sprite {
       y: 0,
     };
 
+    this.setPos();
+
     this.direction = Direction.RIGHT;
   }
 
@@ -45,6 +47,25 @@ class GridSprite extends Phaser.Sprite {
         break;
     }
 
+    this.setPos();
+  }
+
+  update() {
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+      this.direction = Direction.RIGHT;
+    }
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+      this.direction = Direction.LEFT;
+    }
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+      this.direction = Direction.UP;
+    }
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+      this.direction = Direction.DOWN;
+    }
+  }
+
+  setPos() {
     const newPos = this.grid.gridToPixelPos(this.gridPos);
 
     this.position.x = newPos.x;

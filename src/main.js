@@ -11,4 +11,7 @@ game.advance = (tweenTime) => {
   game.state.getCurrentState().advance(tweenTime);
 };
 
+// For testing:
+setInterval(game.advance, 1000);
+
 window.game = game;
