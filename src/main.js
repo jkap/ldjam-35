@@ -4,7 +4,7 @@ import { Phaser } from 'phaser';
 
 import { GameState } from 'gamestate';
 
-const game = new Phaser.Game(800, 600, Phaser.AUTO, '');
+const game = new Phaser.Game(400, 400, Phaser.AUTO, '');
 game.state.add('Game', GameState, true);
 
 game.advance = (tweenTime) => {

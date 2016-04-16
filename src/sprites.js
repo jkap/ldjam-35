@@ -11,7 +11,7 @@ const Direction = {
 
 class GridSprite extends Phaser.Sprite {
   constructor(game, grid) {
-    super(game, 100, 100, 'square');
+    super(game, 100, 100, 'star');
 
     this.anchor.setTo(0.5, 0.5);
 
@@ -24,12 +24,18 @@ class GridSprite extends Phaser.Sprite {
       y: 0,
     };
 
+    this.shapes = ['circle', 'triangle', 'square', 'star'];
+    this.shapeIndex = 0;
+    this.setShape();
+
     this.setPos();
 
     this.direction = Direction.RIGHT;
   }
 
   advance() {
+    const oldGridPos = { x: this.gridPos.x, y: this.gridPos.y };
+
     switch (this.direction) {
       case Direction.RIGHT:
         this.gridPos.x += 1;
@@ -47,7 +53,20 @@ class GridSprite extends Phaser.Sprite {
         break;
     }
 
+    if (this.grid.outOfBounds(this.gridPos)) {
+      this.gridPos = oldGridPos;
+      this.hitEdge();
+    }
+
+    this.shapeIndex++;
+    this.shapeIndex = this.shapeIndex % this.shapes.length;
+
     this.setPos();
+    this.setShape();
+  }
+
+  hitEdge() {
+    // TODO: Oops something should probably happen here
   }
 
   update() {
@@ -70,6 +89,10 @@ class GridSprite extends Phaser.Sprite {
 
     this.position.x = newPos.x;
     this.position.y = newPos.y;
+  }
+
+  setShape() {
+    this.loadTexture(this.shapes[this.shapeIndex]);
   }
 }
 
