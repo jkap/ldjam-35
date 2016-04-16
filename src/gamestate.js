@@ -31,14 +31,14 @@ class GameState extends Phaser.State {
   }
 
   update() {
-    if (this.track && !this.track.playing) {
-      this.track.playing = true;
-      this.sound.play(this.track.key);
-      const trackTimer = this.time.create();
-      trackTimer.loop(timeUtil.msPerBeat(this.track.bpm), () => {
+    if (this.track && !this.track.sound.isPlaying) {
+      this.playTrack(this.track);
+    } else if (this.track && this.track.sound.isPlaying) {
+      const beat = Math.floor(this.track.sound.currentTime / timeUtil.msPerBeat(this.track.bpm));
+      if (beat > this.currentBeat) {
         this.advance();
-      });
-      trackTimer.start();
+        this.currentBeat = beat;
+      }
     }
   }
 
@@ -69,6 +69,11 @@ class GameState extends Phaser.State {
       this.curFriend.setPos();
       this.curFriend.pickShape();
     }
+  }
+
+  playTrack(track) {
+    this.track.sound = this.sound.play(track.key);
+    this.currentBeat = 0;
   }
 }
 

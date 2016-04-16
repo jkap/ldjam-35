@@ -33,9 +33,14 @@ export class TrackManager {
 
   static _cacheBlob(data, game) {
     game.cache.addSound(data.key, null, data.blob);
-    game.sound.decode(data.key);
-    return Object.assign(data, {
-      sound: game.cache.getSound(data.key),
+    return new Promise((resolve, reject) => {
+      game.sound.setDecodedCallback(data.key, () => {
+        console.log('decoded');
+        return resolve(Object.assign(data, {
+          sound: game.cache.getSound(data.key),
+        }));
+      });
+      game.sound.decode(data.key);
     });
   }
 }
