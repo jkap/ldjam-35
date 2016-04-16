@@ -1,6 +1,7 @@
 'use strict';
 
 import { Phaser } from 'phaser';
+import { TrackManager } from './track-manager';
 
 import { GridSprite } from 'sprites';
 import { Grid } from 'grid';
@@ -8,6 +9,10 @@ import { Grid } from 'grid';
 class GameState extends Phaser.State {
   preload() {
     this.load.image('square', 'images/square.png');
+    TrackManager.getTrack('track-1', this)
+      .then(track => {
+        this.track = track;
+      });
   }
 
   create() {
@@ -16,7 +21,11 @@ class GameState extends Phaser.State {
   }
 
   update() {
-
+    if (this.track && !this.track.playing) {
+      console.log('playing');
+      this.track.playing = true;
+      this.sound.play(this.track.key);
+    }
   }
 
   render() {
