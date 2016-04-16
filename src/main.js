@@ -1,7 +1,8 @@
 'use strict';
 
-// import { Phaser } from 'phaser';
+import { Phaser } from 'phaser';
 
-import { Game } from 'game';
+import { GameState } from 'gamestate';
 
-const game = new Game();
+const game = new Phaser.Game(800, 600, Phaser.AUTO, '');
+game.state.add('Game', GameState, true);

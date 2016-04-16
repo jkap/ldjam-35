@@ -3,6 +3,9 @@
 import { Phaser } from 'phaser';
 
 class GameState extends Phaser.State {
+  advance() {
+    // TODO: Implement frame advancement
+  }
   preload() {
     this.load.image('logo', 'images/phaser.png');
   }
