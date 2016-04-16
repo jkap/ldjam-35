@@ -4,7 +4,7 @@ import { Phaser } from 'phaser';
 import { TrackManager } from './track-manager';
 
 import { Grid } from 'grid';
-import { GridEntity } from 'gridentity';
+import { PlayerGridEntity, EnemyGridEntity } from 'gridentity';
 
 import * as timeUtil from './time-util';
 
@@ -22,7 +22,8 @@ class GameState extends Phaser.State {
     const gridSize = this.grid.getSize();
     this.game.scale.setGameSize(gridSize.width, gridSize.height);
 
-    this.enemy = new GridEntity(this.grid, { x: 0, y: 0 }, 0xFF0000);
+    this.player = new PlayerGridEntity(this.game, this.grid, { x: 0, y: 7 }, 0x00FF00);
+    this.enemy = new EnemyGridEntity(this.game, this.grid, { x: 0, y: 0 }, 0xFF0000);
 
     this.graphics = this.game.add.graphics(0, 0);
     window.graphics = this.graphics;
@@ -38,9 +39,12 @@ class GameState extends Phaser.State {
         this.currentBeat = beat;
       }
     }
+
+    this.player.update();
   }
 
-  inputWithinWindow(bpm = this.track.bpm, beat = this.currentBeat, timestamp = this.track.sound.currentTime * 1000) {
+  inputWithinWindow(bpm = this.track.bpm, beat = this.currentBeat,
+                    timestamp = this.track.sound.currentTime * 1000) {
     const window = 20;
 
     const upper = Math.min(timestamp, beat * timeUtil.msPerBeat(bpm) + window);
@@ -54,6 +58,7 @@ class GameState extends Phaser.State {
 
     this.grid.draw(this.graphics);
 
+    this.player.draw(this.graphics);
     this.enemy.draw(this.graphics);
   }
 
