@@ -2,17 +2,17 @@
 
 import { Phaser } from 'phaser';
 
+import { GridSprite } from 'sprites';
+import { Grid } from 'grid';
+
 class GameState extends Phaser.State {
-  advance() {
-    // TODO: Implement frame advancement
-  }
   preload() {
-    this.load.image('logo', 'images/phaser.png');
+    this.load.image('square', 'images/square.png');
   }
 
   create() {
-    const logo = this.add.sprite(this.world.centerX, this.world.centerY, 'logo');
-    logo.anchor.setTo(0.5, 0.5);
+    this.grid = new Grid(20, 20, 20, 0);
+    this.gridSprite = new GridSprite(this.game, this.grid);
   }
 
   update() {
@@ -20,7 +20,10 @@ class GameState extends Phaser.State {
   }
 
   render() {
+  }
 
+  advance() {
+    this.gridSprite.advance();
   }
 }
 
