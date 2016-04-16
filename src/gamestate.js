@@ -3,7 +3,8 @@
 import { Phaser } from 'phaser';
 import { TrackManager } from './track-manager';
 
-import { Grid } from 'grid';
+import { Shape, Grid } from 'grid';
+import { GridEntity } from 'gridentity';
 
 import * as timeUtil from './time-util';
 
@@ -16,9 +17,11 @@ class GameState extends Phaser.State {
   }
 
   create() {
-    this.grid = new Grid(3, 7, 100, 10);
+    this.grid = new Grid(3, 8, 75, 10);
     const gridSize = this.grid.getSize();
     this.game.scale.setGameSize(gridSize.width, gridSize.height);
+
+    this.enemy = new GridEntity(this.grid, { x: 0, y: 0 }, 0xFF0000);
 
     this.graphics = this.game.add.graphics(0, 0);
     window.graphics = this.graphics;
@@ -40,9 +43,12 @@ class GameState extends Phaser.State {
     this.graphics.clear();
 
     this.grid.draw(this.graphics);
+
+    this.enemy.draw(this.graphics);
   }
 
   advance() {
+    this.enemy.advance();
   }
 
   playTrack(track) {

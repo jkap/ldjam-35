@@ -14,7 +14,7 @@ class Grid {
 
     this.shapes = [];
     for (let i = 0; i < width * height; i++) {
-      this.shapes.push(Shape.SQUARE);
+      this.shapes.push(Math.random() > 0.5 ? Shape.SQUARE : Shape.CIRCLE);
     }
   }
 
