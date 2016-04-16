@@ -2,7 +2,7 @@
 
 import { Phaser } from 'phaser';
 
-import { GridSprite } from 'sprites';
+import { HeadSprite, PickUpFriendSprite } from 'sprites';
 import { Grid } from 'grid';
 
 class GameState extends Phaser.State {
@@ -15,7 +15,12 @@ class GameState extends Phaser.State {
 
   create() {
     this.grid = new Grid(20, 20, 20, 0);
-    this.gridSprite = new GridSprite(this.game, this.grid);
+    this.headSprite = new HeadSprite(this.game, this.grid, 10, 10);
+
+    // Find your friend <3
+    this.curFriend = null;
+
+    this.spawnFriend();
   }
 
   update() {
@@ -23,10 +28,32 @@ class GameState extends Phaser.State {
   }
 
   render() {
+
   }
 
   advance() {
-    this.gridSprite.advance();
+    this.headSprite.advance();
+    if (this.curFriend) {
+      if (this.headSprite.gridPos.x === this.curFriend.gridPos.x
+       && this.headSprite.gridPos.y === this.curFriend.gridPos.y) {
+        this.headSprite.pickUp(this.curFriend.shape);
+        this.spawnFriend();
+      }
+    }
+  }
+
+  spawnFriend() {
+    const sx = this.game.rnd.integerInRange(0, this.grid.width);
+    const sy = this.game.rnd.integerInRange(0, this.grid.height);
+
+    if (!this.curFriend) {
+      this.curFriend = new PickUpFriendSprite(this.game, this.grid, sx, sy);
+    } else {
+      this.curFriend.gridPos.x = sx;
+      this.curFriend.gridPos.y = sy;
+      this.curFriend.setPos();
+      this.curFriend.pickShape();
+    }
   }
 }
 

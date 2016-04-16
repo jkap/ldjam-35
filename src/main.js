@@ -12,6 +12,6 @@ game.advance = (tweenTime) => {
 };
 
 // For testing:
-setInterval(game.advance, 1000);
+setInterval(game.advance, 500);
 
 window.game = game;
