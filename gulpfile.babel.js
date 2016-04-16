@@ -19,6 +19,7 @@ const paths = {
   img: './src/images/*',
   js: './src/**/*.js',
   src: './src',
+  tracks: './src/tracks/**',
 };
 
 gulp.task('connect', () => {
@@ -79,9 +80,14 @@ gulp.task('buildimg', () =>
     }))
     .pipe(gulp.dest(path.join(paths.dist, 'images'))));
 
+gulp.task('copy-tracks', () => {
+  gulp.src(paths.tracks)
+    .pipe(gulp.dest(path.join(paths.dist, 'tracks')));
+});
+
 gulp.task('clean', () =>
   del(path.join(paths.dist, '*')));
 
 gulp.task('build', (done) => {
-  runSeq('clean', ['buildimg', 'buildjs', 'buildhtml'], done);
+  runSeq('clean', ['buildimg', 'buildjs', 'buildhtml', 'copy-tracks'], done);
 });

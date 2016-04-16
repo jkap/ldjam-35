@@ -1,4 +1,4 @@
-'use strict';
+import 'babel-polyfill';
 
 import { Phaser } from 'phaser';
 
@@ -10,8 +10,5 @@ game.state.add('Game', GameState, true);
 game.advance = (tweenTime) => {
   game.state.getCurrentState().advance(tweenTime);
 };
-
-// For testing:
-setInterval(game.advance, 500);
 
 window.game = game;
