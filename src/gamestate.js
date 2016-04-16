@@ -12,6 +12,7 @@ class GameState extends Phaser.State {
     TrackManager.getTrack('track-1', this)
       .then(track => {
         this.track = track;
+        this.playTrack(track);
       });
   }
 
@@ -25,15 +26,22 @@ class GameState extends Phaser.State {
   }
 
   update() {
-    if (this.track && !this.track.sound.isPlaying) {
-      this.playTrack(this.track);
-    } else if (this.track && this.track.sound.isPlaying) {
+    if (this.track && this.track.sound.isPlaying) {
       const beat = Math.floor(this.track.sound.currentTime / timeUtil.msPerBeat(this.track.bpm));
       if (beat > this.currentBeat) {
         this.advance();
         this.currentBeat = beat;
       }
     }
+  }
+
+  inputWithinWindow(bpm, beat, timestamp) {
+    const window = 20;
+
+    const upper = Math.min(timestamp, beat * timeUtil.msPerBeat(bpm) + window);
+    const lower = Math.max(timestamp, beat * timeUtil.msPerBeat(bpm) - window);
+
+    return timestamp >= lower || timestamp <= upper;
   }
 
   render() {
@@ -52,6 +60,7 @@ class GameState extends Phaser.State {
   }
 
   advance() {
+    console.log('beat');
   }
 
   playTrack(track) {
