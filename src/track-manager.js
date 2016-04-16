@@ -32,7 +32,6 @@ export class TrackManager {
   }
 
   static _cacheBlob(data, game) {
-    // const url = URL.createObjectURL(data.blob);
     game.cache.addSound(data.key, null, data.blob);
     game.sound.decode(data.key);
     return Object.assign(data, {

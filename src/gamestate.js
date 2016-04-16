@@ -6,6 +6,8 @@ import { TrackManager } from './track-manager';
 import { GridSprite } from 'sprites';
 import { Grid } from 'grid';
 
+import * as timeUtil from './time-util';
+
 class GameState extends Phaser.State {
   preload() {
     this.load.image('circle', 'images/circle.png');
@@ -25,9 +27,13 @@ class GameState extends Phaser.State {
 
   update() {
     if (this.track && !this.track.playing) {
-      console.log('playing');
       this.track.playing = true;
       this.sound.play(this.track.key);
+      const trackTimer = this.time.create();
+      trackTimer.loop(timeUtil.msPerBeat(this.track.bpm), () => {
+        this.advance();
+      });
+      trackTimer.start();
     }
   }
 
