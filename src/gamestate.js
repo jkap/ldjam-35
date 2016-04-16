@@ -39,16 +39,7 @@ class GameState extends Phaser.State {
   render() {
     this.graphics.clear();
 
-    // Draw the grid in the background
-    this.graphics.beginFill(0x1c1c1c);
-    for (let x = 0; x < this.grid.width; x++) {
-      for (let y = 0; y < this.grid.height; y++) {
-        const pos = this.grid.gridToPixelPos({ x: x, y: y });
-        this.graphics.drawRect(pos.x - this.grid.squareSize / 2, pos.y - this.grid.squareSize / 2,
-                               this.grid.squareSize, this.grid.squareSize);
-      }
-    }
-    this.graphics.endFill();
+    this.grid.draw(this.graphics);
   }
 
   advance() {
