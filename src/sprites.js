@@ -30,6 +30,8 @@ class GridSprite extends Phaser.Sprite {
   }
 
   advance() {
+    const oldGridPos = { x: this.gridPos.x, y: this.gridPos.y };
+
     switch (this.direction) {
       case Direction.RIGHT:
         this.gridPos.x += 1;
@@ -47,7 +49,16 @@ class GridSprite extends Phaser.Sprite {
         break;
     }
 
+    if (this.grid.outOfBounds(this.gridPos)) {
+      this.gridPos = oldGridPos;
+      this.hitEdge();
+    }
+
     this.setPos();
+  }
+
+  hitEdge() {
+    // TODO: Oops something should probably happen here
   }
 
   update() {
