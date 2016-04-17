@@ -62,8 +62,8 @@ class EnemyGridEntity extends GridEntity {
       y: this.pos.y,
     };
     this.game.add.tween(this.fakePos)
-                 .delay(beatTime / 2.0)
                  .to({ y: this.pos.y + 1 }, beatTime / 2.0, Phaser.Easing.Exponential.In, true)
+                 .delay(beatTime / 2.0)
                  .onComplete.add(() => {
                    this.pos.y = this.fakePos.y;
                    this.fakePos = null;
