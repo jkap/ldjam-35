@@ -16,9 +16,16 @@ function pickRandom(arr) {
 
 export function* generateGrid(num, difficulty) {
   let i = 0;
+  const numEach = num / (Object.keys(Shape).length);
+  const bag = [];
+  Object.keys(Shape).forEach(shapeName => {
+    for (let y = 0; y < numEach; y += 1) {
+      bag.push(Shape[shapeName]);
+    }
+  });
 
   while (i < num) {
-    yield Shape[pickRandom(Object.keys(Shape))];
+    yield bag.splice(Math.floor(Math.random() * bag.length), 1)[0];
     i++;
   }
 }
@@ -50,25 +57,63 @@ function _shouldGenEnemy(probability) {
   ];
 }
 
-export function* generateEnemy() {
+function getProbabilityEasy(rowsSinceLast) {
+  if (rowsSinceLast <= 1) {
+    return 0;
+  } else if (rowsSinceLast <= 3) {
+    return 0.15;
+  } else if (rowsSinceLast <= 4) {
+    return 0.25;
+  } else if (rowsSinceLast <= 5) {
+    return 0.75;
+  }
+  return 1;
+}
+
+function getProbabilityMedium(rowsSinceLast) {
+  if (rowsSinceLast <= 1) {
+    return 0;
+  } else if (rowsSinceLast <= 3) {
+    return 0.25;
+  } else if (rowsSinceLast <= 4) {
+    return 0.5;
+  } else if (rowsSinceLast <= 5) {
+    return 0.75;
+  }
+
+  return 1;
+}
+
+function getProbabilityHard(rowsSinceLast) {
+  if (rowsSinceLast <= 1) {
+    return 0;
+  } else if (rowsSinceLast <= 4) {
+    return 0.5;
+  } else if (rowsSinceLast <= 5) {
+    return 0.75;
+  }
+
+  return 1;
+}
+
+function getProbability(level, rowsSinceLast) {
+  if (level === 0) {
+    return 0;
+  } else if (level <= 5) {
+    return getProbabilityEasy(rowsSinceLast);
+  } else if (level <= 10) {
+    return getProbabilityMedium(rowsSinceLast);
+  }
+  return getProbabilityHard(rowsSinceLast);
+}
+
+export function* generateEnemy(level) {
   let rowsSinceLast = 8;
-  let probability;
 
   while (true) {
     rowsSinceLast += 1;
 
-    if (rowsSinceLast <= 1) {
-      yield null;
-      continue;
-    } else if (rowsSinceLast <= 3) {
-      probability = 0.15;
-    } else if (rowsSinceLast <= 4) {
-      probability = 0.25;
-    } else if (rowsSinceLast <= 5) {
-      probability = 0.75;
-    } else {
-      probability = 1;
-    }
+    const probability = getProbability(level, rowsSinceLast);
 
     const enemies = _shouldGenEnemy(probability);
     if (enemies) {
