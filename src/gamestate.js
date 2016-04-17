@@ -168,15 +168,16 @@ class GameState extends Phaser.State {
     const spacing = 3;
     const height = 7;
 
+    let curTop = botRight.y - height;
+
     this.graphics.beginFill(0xFAFAFA);
     for (let i = 1; i <= this.level; i++) {
-      const markerTopLeft = {
-        x: 0,
-        y: botRight.y - i * (height + spacing) + spacing,
-      };
-
-      this.graphics.drawRect(markerTopLeft.x, markerTopLeft.y,
+      this.graphics.drawRect(0, curTop,
                              this.scoreAreaWidth - 1, height);
+      curTop -= height + spacing;
+      if (i % 5 === 0) {
+        curTop -= height;
+      }
     }
     this.graphics.endFill();
   }
