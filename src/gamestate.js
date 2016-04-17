@@ -117,7 +117,8 @@ class GameState extends Phaser.State {
     const botRight = {
       x: this.gameSize.width - 1 - (2 - pulse),
       y: this.gameSize.height - 1 - (2 - pulse),
-    }
+    };
+
     this.graphics.lineStyle(1, 0xFAFAFA, 1);
     this.graphics.moveTo(topLeft.x, topLeft.y);
     this.graphics.lineTo(botRight.x, topLeft.y);
@@ -126,10 +127,10 @@ class GameState extends Phaser.State {
     this.graphics.lineTo(topLeft.x, topLeft.y);
     this.graphics.lineStyle(0, null, 0);
 
-    this.grid.draw(this.graphics, this.getPulse(), this.gridOrigin);
+    this.grid.draw(this.graphics, this.getPulse());
 
     if (this.oldGrid) {
-      this.oldGrid.draw(this.graphics, this.getPulse(), this.oldGridOrigin);
+      this.oldGrid.draw(this.graphics, this.getPulse());
     }
 
     this.player.draw(this.graphics, this.getPulse());
@@ -184,16 +185,20 @@ class GameState extends Phaser.State {
     const gridSize = this.grid.getSize();
     this.oldGrid = this.grid;
     this.grid = new Grid(3, 8, 75, 10);
-    this.gridOrigin = {
+    this.grid.origin = {
       x: gridSize.width,
       y: -gridSize.height + 105,
     };
-    this.oldGridOrigin = {
+    this.oldGrid.origin = {
       x: 0,
       y: 0,
     };
 
     this.player.grid = this.grid;
+    this.player.pos = {
+      x: 0,
+      y: 7,
+    };
 
     const tweenTime = timeUtil.msPerBeat(this.track.bpm) * 2;
     const easing = Phaser.Easing.Circular.InOut;
@@ -201,26 +206,29 @@ class GameState extends Phaser.State {
     this.game.add.tween(this.gameSize)
       .to({ width: this.gameSize.width * 2 }, tweenTime, easing, true)
       .onComplete.add(() => {
-        this.game.add.tween(this.gridOrigin)
+        this.game.add.tween(this.grid.origin)
           .to({ y: 0 }, tweenTime, easing, true)
           .onComplete.add(() => {
-            this.game.add.tween(this.gridOrigin)
+            this.game.add.tween(this.grid.origin)
               .to({ x: 0 }, tweenTime, easing, true);
             this.game.add.tween(this.gameSize)
-              .to({ width: this.gameSize.width / 2 }, tweenTime, easing, true);
+              .to({ width: this.gameSize.width / 2 }, tweenTime, easing, true)
+              .onComplete.add(() => {
+                this.isWon = false;
+                this.enemyGenerator = generateEnemy();
+              });
           });
 
-        this.game.add.tween(this.oldGridOrigin)
+        this.game.add.tween(this.oldGrid.origin)
           .to({ y: gridSize.height - 105 }, tweenTime, easing, true)
           .onComplete.add(() => {
-            this.game.add.tween(this.oldGridOrigin)
+            this.game.add.tween(this.oldGrid.origin)
               .to({ x: -gridSize.width }, tweenTime, easing, true);
           });
       });
 
     this.enemies = [];
     this.enemyGenerator.return();
-    console.log(this.oldGrid);
   }
 
   passThrough() {
@@ -233,6 +241,7 @@ class GameState extends Phaser.State {
         delay = this.track.sound.currentTime -
           ((currentBeat++) * timeUtil.msPerBeat(this.track.bpm));
       }
+
       this.succSounds[currentBeat % 4].play('', delay);
     }
   }
