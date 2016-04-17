@@ -59,13 +59,11 @@ class GameState extends Phaser.State {
 
     // Check collisions
     this.enemies.forEach(enemy => {
-      if (enemy.pos.x === this.player.pos.x && enemy.pos.y === this.player.pos.y) {
-        // On the same tile, are you the same shape?
-        if (enemy.shape !== this.grid.getShapeAt(enemy.pos)) {
-          this.youLose();
-        } else {
-          this.passThrough();
-        }
+      if (enemy.collides(this.player, false)) {
+        this.youLose();
+      }
+      if (enemy.collides(this.player, true)) {
+        this.passThrough();
       }
     });
 
@@ -101,8 +99,9 @@ class GameState extends Phaser.State {
     this.graphics.drawRect(0, 0, this.game.width, this.game.height);
     this.graphics.endFill();
 
-    if (this.track)
+    if (this.track) {
       this.grid.draw(this.graphics, this.getPulse());
+    }
 
     this.player.draw(this.graphics);
     this.enemies.forEach(enemy => {

@@ -55,6 +55,7 @@ class EnemyGridEntity extends GridEntity {
     const color = ShapeColors[shape];
     super(game, grid, pos, color, shape);
   }
+
   advance(tweenTime) {
     this.fakePos = {
       x: this.pos.x,
@@ -66,6 +67,35 @@ class EnemyGridEntity extends GridEntity {
                    this.pos.y = this.fakePos.y;
                    this.fakePos = null;
                  });
+  }
+
+  collides(player, shouldShapesMatch) {
+    let colliding = false;
+    let shapesMatch = true;
+    if (!this.fakePos) {
+      if (this.pos.x === player.pos.x && this.pos.y === player.pos.y) {
+        colliding = true;
+        shapesMatch = this.shape === this.grid.getShapeAt(this.pos);
+      }
+    } else {
+      // Do some special logic because we're moving
+      const halfWayDown = (this.fakePos.y - this.pos.y) > 0.5;
+      if (!halfWayDown) {
+        // Use our old position to check collisions
+        if (this.pos.x === player.pos.x && this.pos.y === player.pos.y) {
+          colliding = true;
+          shapesMatch = this.shape === this.grid.getShapeAt(this.pos);
+        }
+      } else {
+        // User our new position to check collisions
+        if (this.pos.x === player.pos.x && this.pos.y + 1 === player.pos.y) {
+          colliding = true;
+          shapesMatch = this.shape === this.grid.getShapeAt({ x: this.pos.x, y: this.pos.y + 1 });
+        }
+      }
+    }
+
+    return colliding && (shouldShapesMatch === shapesMatch);
   }
 }
 
