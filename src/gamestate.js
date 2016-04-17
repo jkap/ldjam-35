@@ -45,14 +45,16 @@ class GameState extends Phaser.State {
 
   inputWithinWindow(bpm = this.track.bpm, beat = this.currentBeat,
                     timestamp = this.track.sound.currentTime) {
-
     console.log(bpm, beat, timestamp);
-    const window = 100;
+    const beatWindow = 75;
 
-    const upper = Math.min(timestamp, beat * timeUtil.msPerBeat(bpm) + window);
-    const lower = Math.max(timestamp, beat * timeUtil.msPerBeat(bpm) - window);
+    function comp(_beat) {
+      const upper = _beat * timeUtil.msPerBeat(bpm) + beatWindow;
+      const lower = _beat * timeUtil.msPerBeat(bpm) - beatWindow;
+      return (timestamp >= lower && timestamp <= upper);
+    }
 
-    return timestamp >= lower && timestamp <= upper;
+    return comp(beat) || comp(beat + 1);
   }
 
   render() {

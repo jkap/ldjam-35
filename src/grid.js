@@ -1,9 +1,6 @@
 'use strict';
 
-const Shape = {
-  SQUARE: 'SQUARE',
-  CIRCLE: 'CIRCLE',
-};
+import { Shape, generateGrid } from './grid-util';
 
 class Grid {
   constructor(width, height, squareSize, spacing) {
@@ -13,8 +10,8 @@ class Grid {
     this.spacing = spacing;
 
     this.shapes = [];
-    for (let i = 0; i < width * height; i++) {
-      this.shapes.push(Math.random() > 0.5 ? Shape.SQUARE : Shape.CIRCLE);
+    for (const shape of generateGrid(width * height)) {
+      this.shapes.push(shape);
     }
   }
 
