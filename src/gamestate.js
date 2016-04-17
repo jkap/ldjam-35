@@ -25,13 +25,19 @@ class GameState extends Phaser.State {
   }
 
   create() {
-    this.grid = new Grid(3, 8, 75, 10);
-    const gridSize = this.grid.getSize();
-    this.game.scale.setGameSize(gridSize.width * 2, gridSize.height);
-    this.gameSize = Object.assign({}, gridSize);
-
     this.level = 0;
-    this.player = new PlayerGridEntity(this.game, this.grid, { x: 0, y: 7 }, 0x00FF00);
+    this.grid = new Grid(3, 2, 75, 10, this.level);
+    this.grid.origin = {
+      x: 0,
+      y: 700 - 190,
+    }
+    this.game.scale.setGameSize(275 * 2, 700);
+    this.gameSize = Object.assign({}, {
+      width: 275,
+      height: 700,
+    });
+
+    this.player = new PlayerGridEntity(this.game, this.grid, { x: 0, y: 1 }, 0x00FF00);
     this.enemyGenerator = generateEnemy(this.level);
     this.enemies = [];
 
@@ -73,7 +79,8 @@ class GameState extends Phaser.State {
     });
 
     // Check win state
-    if (this.player.pos.y === 1 && this.player.pos.x === this.grid.width - 1) {
+    if ((!this.level && this.player.pos.y === 0 && this.player.pos.x === this.grid.width - 1) ||
+        (this.level > 0 && this.player.pos.y === 1 && this.player.pos.x === this.grid.width - 1)) {
       this.handleWin();
     }
 
@@ -169,10 +176,10 @@ class GameState extends Phaser.State {
     this.track.sound = this.sound.add(track.key);
     this.track.sound.addMarker('intro', 0, 40, 1, true);
     this.track.sound.addMarker('loop', 40, 64);
-    this.track.sound.play('intro');
+    this.track.sound = this.track.sound.play('intro');
     this.track.sound.onMarkerComplete.add(() => {
       console.log('looping');
-      this.track.sound.play('loop');
+      this.track.sound = this.track.sound.play('loop');
     });
     this.currentBeat = 0;
   }
@@ -180,7 +187,8 @@ class GameState extends Phaser.State {
   youLose() {
     if (!this.ulost) {
       this.ulost = true;
-      this.track.sound.stop();
+      this.sound.stopAll();
+      this.sound.stopAll();
       this.sound.play('fail-sound');
       this.state.restart();
     }
@@ -193,17 +201,21 @@ class GameState extends Phaser.State {
 
     this.isWon = true;
     this.level += 1;
-    const gridSize = this.grid.getSize();
     this.oldGrid = this.grid;
-    this.grid = new Grid(3, 8, 75, 10);
-    this.grid.origin = {
-      x: gridSize.width,
-      y: -gridSize.height + 190,
-    };
-    this.oldGrid.origin = {
-      x: 0,
-      y: 0,
-    };
+    this.grid = new Grid(3, 8, 75, 10, this.level);
+    const gridSize = this.grid.getSize();
+    if (this.level === 1) {
+      this.grid.origin = {
+        x: gridSize.width,
+        y: -95,
+      }
+    } else {
+      this.grid.origin = {
+        x: gridSize.width,
+        y: -gridSize.height + 190,
+      };
+    }
+
 
     this.player.grid = this.grid;
     this.player.pos = {
@@ -230,7 +242,7 @@ class GameState extends Phaser.State {
           });
 
         this.game.add.tween(this.oldGrid.origin)
-          .to({ y: gridSize.height - 190 }, tweenTime, easing, true)
+          .to({ y: this.oldGrid.origin.y + 510 }, tweenTime, easing, true)
           .onComplete.add(() => {
             this.game.add.tween(this.oldGrid.origin)
               .to({ x: -gridSize.width }, tweenTime, easing, true);

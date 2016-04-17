@@ -3,11 +3,12 @@
 import { Shape, generateGrid } from './grid-util';
 
 class Grid {
-  constructor(width, height, squareSize, spacing) {
+  constructor(width, height, squareSize, spacing, level) {
     this.width = width;
     this.height = height;
     this.squareSize = squareSize;
     this.spacing = spacing;
+    this.level = level;
     this.origin = {
       x: 0,
       y: 0,
@@ -59,7 +60,8 @@ class Grid {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const pos = this.gridToPixelPos({ x: x, y: y });
-        if (x === this.width - 1 && y === 1) {
+        if ((this.level === 0 && x === this.width - 1 && y === 0) ||
+            (this.level > 0 && x === this.width - 1 && y === 1)) {
           graphics.beginFill(0x009688);
         }
         switch (this.getShapeAt({ x: x, y: y })) {
@@ -74,7 +76,8 @@ class Grid {
           default:
             break;
         }
-        if (x === this.width - 1 && y === 1) {
+        if ((this.level === 0 && x === this.width - 1 && y === 0) ||
+            (this.level > 0 && x === this.width - 1 && y === 1)) {
           graphics.beginFill(0xFAFAFA);
         }
       }

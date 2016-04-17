@@ -14,8 +14,9 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function* generateGrid(num, difficulty) {
+export function* generateGrid(num) {
   let i = 0;
+
   const numEach = num / (Object.keys(Shape).length);
   const bag = [];
   Object.keys(Shape).forEach(shapeName => {
