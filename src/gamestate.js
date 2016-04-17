@@ -30,8 +30,9 @@ class GameState extends Phaser.State {
     this.game.scale.setGameSize(gridSize.width * 2, gridSize.height);
     this.gameSize = Object.assign({}, gridSize);
 
+    this.level = 1;
     this.player = new PlayerGridEntity(this.game, this.grid, { x: 0, y: 7 }, 0x00FF00);
-    this.enemyGenerator = generateEnemy();
+    this.enemyGenerator = generateEnemy(this.level);
     this.enemies = [];
 
     this.graphics = this.game.add.graphics(0, 0);
@@ -182,6 +183,7 @@ class GameState extends Phaser.State {
     }
 
     this.isWon = true;
+    this.level += 1;
     const gridSize = this.grid.getSize();
     this.oldGrid = this.grid;
     this.grid = new Grid(3, 8, 75, 10);
@@ -228,7 +230,7 @@ class GameState extends Phaser.State {
 
     this.enemies = [];
     this.enemyGenerator.return();
-    this.enemyGenerator = generateEnemy();
+    this.enemyGenerator = generateEnemy(this.level);
   }
 
   passThrough() {
