@@ -49,7 +49,7 @@ class Grid {
   }
 
   draw(graphics) {
-    graphics.beginFill(0xECEFF1);
+    graphics.beginFill(0xFAFAFA);
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const pos = this.gridToPixelPos({ x: x, y: y });
