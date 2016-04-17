@@ -66,15 +66,11 @@ export function* generateEnemy() {
     if (rowsSinceLast <= 1) {
       yield null;
       continue;
-    } else if (rowsSinceLast <= 2) {
-      probability = 0.05;
     } else if (rowsSinceLast <= 3) {
-      probability = 0.1;
+      probability = 0.15;
     } else if (rowsSinceLast <= 4) {
       probability = 0.25;
     } else if (rowsSinceLast <= 5) {
-      probability = 0.5;
-    } else if (rowsSinceLast <= 6) {
       probability = 0.75;
     } else {
       probability = 1;
