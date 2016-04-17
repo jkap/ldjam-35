@@ -42,6 +42,8 @@ class GameState extends Phaser.State {
       this.sound.add('succ-beat-3'),
       this.sound.add('succ-beat-4'),
     ];
+
+    this.ulost = false;
   }
 
   update() {
@@ -124,12 +126,10 @@ class GameState extends Phaser.State {
   }
 
   youLose() {
-    // TODO ????
     if (!this.ulost) {
       this.ulost = true;
       this.track.sound.stop();
       this.sound.play('fail-sound');
-      console.log('*sad trombone sound*');
       this.state.restart();
     }
   }
