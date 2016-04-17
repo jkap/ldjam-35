@@ -109,12 +109,21 @@ class GameState extends Phaser.State {
     this.graphics.endFill();
 
     // Do the outline
+    const pulse = this.getPulse() * 2;
+    const topLeft = {
+      x: 2 - pulse,
+      y: 2 - pulse,
+    };
+    const botRight = {
+      x: this.gameSize.width - 1 - (2 - pulse),
+      y: this.gameSize.height - 1 - (2 - pulse),
+    }
     this.graphics.lineStyle(1, 0xFAFAFA, 1);
-    this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(this.gameSize.width - 1, 0);
-    this.graphics.lineTo(this.gameSize.width - 1, this.gameSize.height - 1);
-    this.graphics.lineTo(0, this.gameSize.height - 1);
-    this.graphics.lineTo(0, 0);
+    this.graphics.moveTo(topLeft.x, topLeft.y);
+    this.graphics.lineTo(botRight.x, topLeft.y);
+    this.graphics.lineTo(botRight.x, botRight.y);
+    this.graphics.lineTo(topLeft.x, botRight.y);
+    this.graphics.lineTo(topLeft.x, topLeft.y);
     this.graphics.lineStyle(0, null, 0);
 
     this.grid.draw(this.graphics, this.getPulse(), this.gridOrigin);
