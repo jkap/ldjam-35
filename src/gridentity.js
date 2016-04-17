@@ -57,17 +57,7 @@ class EnemyGridEntity extends GridEntity {
   }
 
   advance(beatTime) {
-    this.fakePos = {
-      x: this.pos.x,
-      y: this.pos.y,
-    };
-    this.game.add.tween(this.fakePos)
-                 .to({ y: this.pos.y + 1 }, beatTime / 2.0, Phaser.Easing.Exponential.In, true)
-                 .delay(beatTime / 2.0)
-                 .onComplete.add(() => {
-                   this.pos.y = this.fakePos.y;
-                   this.fakePos = null;
-                 });
+    this.pos.y++;
   }
 
   collides(player, shouldShapesMatch) {
