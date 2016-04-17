@@ -59,6 +59,9 @@ class Grid {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const pos = this.gridToPixelPos({ x: x, y: y });
+        if (x === this.width - 1 && y === 1) {
+          graphics.beginFill(0x009688);
+        }
         switch (this.getShapeAt({ x: x, y: y })) {
           case Shape.SQUARE:
             graphics.drawRect(pos.x - this.squareSize / 2 - halfPulse,
@@ -70,6 +73,9 @@ class Grid {
             break;
           default:
             break;
+        }
+        if (x === this.width - 1 && y === 1) {
+          graphics.beginFill(0xFAFAFA);
         }
       }
     }
