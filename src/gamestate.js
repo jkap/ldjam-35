@@ -70,7 +70,7 @@ class GameState extends Phaser.State {
     });
 
     // Check win state
-    if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+    if (this.player.pos.y === 1 && this.player.pos.x === this.grid.width - 1) {
       this.handleWin();
     }
 
@@ -187,7 +187,7 @@ class GameState extends Phaser.State {
     this.grid = new Grid(3, 8, 75, 10);
     this.grid.origin = {
       x: gridSize.width,
-      y: -gridSize.height + 105,
+      y: -gridSize.height + 190,
     };
     this.oldGrid.origin = {
       x: 0,
@@ -220,7 +220,7 @@ class GameState extends Phaser.State {
           });
 
         this.game.add.tween(this.oldGrid.origin)
-          .to({ y: gridSize.height - 105 }, tweenTime, easing, true)
+          .to({ y: gridSize.height - 190 }, tweenTime, easing, true)
           .onComplete.add(() => {
             this.game.add.tween(this.oldGrid.origin)
               .to({ x: -gridSize.width }, tweenTime, easing, true);
