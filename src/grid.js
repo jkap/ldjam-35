@@ -8,6 +8,10 @@ class Grid {
     this.height = height;
     this.squareSize = squareSize;
     this.spacing = spacing;
+    this.origin = {
+      x: 0,
+      y: 0,
+    };
 
     this.shapes = [];
     for (const shape of generateGrid(width * height)) {
@@ -18,11 +22,11 @@ class Grid {
   /**
    * Returns the pixel position for the center of the given tile
    */
-  gridToPixelPos(pos, origin = { x: 0, y: 0 }) {
+  gridToPixelPos(pos) {
     const squarePlusSpace = this.squareSize + this.spacing;
     return {
-      x: pos.x * squarePlusSpace + squarePlusSpace / 2 + this.spacing + origin.x,
-      y: pos.y * squarePlusSpace + squarePlusSpace / 2 + this.spacing + origin.y,
+      x: pos.x * squarePlusSpace + squarePlusSpace / 2 + this.spacing + this.origin.x,
+      y: pos.y * squarePlusSpace + squarePlusSpace / 2 + this.spacing + this.origin.y,
     };
   }
 
@@ -48,13 +52,13 @@ class Grid {
     };
   }
 
-  draw(graphics, pulse, origin = { x: 0, y: 0 }) {
+  draw(graphics, pulse) {
     const scaledPulse = pulse * 5;
     const halfPulse = scaledPulse / 2;
     graphics.beginFill(0xFAFAFA);
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
-        const pos = this.gridToPixelPos({ x: x, y: y }, origin);
+        const pos = this.gridToPixelPos({ x: x, y: y });
         switch (this.getShapeAt({ x: x, y: y })) {
           case Shape.SQUARE:
             graphics.drawRect(pos.x - this.squareSize / 2 - halfPulse,
