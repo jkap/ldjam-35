@@ -17,6 +17,7 @@ class GameState extends Phaser.State {
         this.track = track;
         this.playTrack(track);
       });
+    this.load.audio('fail-sound', './tracks/fail.m4a');
   }
 
   create() {
@@ -111,7 +112,12 @@ class GameState extends Phaser.State {
 
   youLose() {
     // TODO ????
-    console.log('*sad trombone sound*');
+    if (!this.ulost) {
+      this.ulost = true;
+      this.track.sound.stop();
+      this.sound.play('fail-sound');
+      console.log('*sad trombone sound*');
+    }
   }
 }
 
