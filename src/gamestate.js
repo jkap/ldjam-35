@@ -49,7 +49,9 @@ class GameState extends Phaser.State {
   }
 
   update() {
-    if (this.track && this.track.sound.isPlaying) {
+    if (!this.track) return;
+
+    if (this.track.sound.isPlaying) {
       const beat = Math.floor(this.track.sound.currentTime / timeUtil.msPerBeat(this.track.bpm));
       if (beat > this.currentBeat) {
         if (beat % 2 === 1) {
