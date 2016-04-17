@@ -77,19 +77,19 @@ class PlayerGridEntity extends GridEntity {
 
     if (right && !this.lastRight) {
       tryToMove = true;
-      targetPos.x++;
+      targetPos.x = Math.min(targetPos.x + 1, this.grid.width - 1);
     }
     if (left && !this.lastLeft) {
       tryToMove = true;
-      targetPos.x--;
+      targetPos.x = Math.max(targetPos.x - 1, 0);
     }
     if (up && !this.lastUp) {
       tryToMove = true;
-      targetPos.y--;
+      targetPos.y = Math.max(targetPos.y - 1, 0);
     }
     if (down && !this.lastDown) {
       tryToMove = true;
-      targetPos.y++;
+      targetPos.y = Math.min(targetPos.y + 1, this.grid.height - 1);
     }
 
     if (tryToMove) {

@@ -124,6 +124,7 @@ class GameState extends Phaser.State {
       this.track.sound.stop();
       this.sound.play('fail-sound');
       console.log('*sad trombone sound*');
+      this.state.restart();
     }
   }
 
