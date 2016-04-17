@@ -18,6 +18,7 @@ class GameState extends Phaser.State {
         this.playTrack(track);
       });
     this.load.audio('fail-sound', './tracks/fail.m4a');
+    this.load.audio('succ-beat-1', './tracks/succ-beat-1.m4a');
   }
 
   create() {
@@ -31,6 +32,10 @@ class GameState extends Phaser.State {
 
     this.graphics = this.game.add.graphics(0, 0);
     window.graphics = this.graphics;
+
+    this.succSounds = {
+      1: this.sound.add('succ-beat-1')
+    };
   }
 
   update() {
@@ -50,6 +55,8 @@ class GameState extends Phaser.State {
         // On the same tile, are you the same shape?
         if (enemy.shape !== this.grid.getShapeAt(enemy.pos)) {
           this.youLose();
+        } else {
+          this.passThrough();
         }
       }
     });
@@ -117,6 +124,12 @@ class GameState extends Phaser.State {
       this.track.sound.stop();
       this.sound.play('fail-sound');
       console.log('*sad trombone sound*');
+    }
+  }
+
+  passThrough() {
+    if (!this.succSounds[1].isPlaying) {
+      this.succSounds[1].play();
     }
   }
 }
