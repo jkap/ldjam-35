@@ -55,17 +55,48 @@ class EnemyGridEntity extends GridEntity {
     const color = ShapeColors[shape];
     super(game, grid, pos, color, shape);
   }
-  advance(tweenTime) {
+
+  advance(beatTime) {
     this.fakePos = {
       x: this.pos.x,
       y: this.pos.y,
     };
     this.game.add.tween(this.fakePos)
-                 .to({ y: this.pos.y + 1 }, tweenTime, Phaser.Easing.Circular.InOut, true)
+                 .delay(beatTime / 2)
+                 .to({ y: this.pos.y + 1 }, beatTime / 2, Phaser.Easing.Circular.InOut, true)
                  .onComplete.add(() => {
                    this.pos.y = this.fakePos.y;
                    this.fakePos = null;
                  });
+  }
+
+  collides(player, shouldShapesMatch) {
+    let colliding = false;
+    let shapesMatch = true;
+    if (!this.fakePos) {
+      if (this.pos.x === player.pos.x && this.pos.y === player.pos.y) {
+        colliding = true;
+        shapesMatch = this.shape === this.grid.getShapeAt(this.pos);
+      }
+    } else {
+      // Do some special logic because we're moving
+      const halfWayDown = (this.fakePos.y - this.pos.y) > 0.5;
+      if (!halfWayDown) {
+        // Use our old position to check collisions
+        if (this.pos.x === player.pos.x && this.pos.y === player.pos.y) {
+          colliding = true;
+          shapesMatch = this.shape === this.grid.getShapeAt(this.pos);
+        }
+      } else {
+        // User our new position to check collisions
+        if (this.pos.x === player.pos.x && this.pos.y + 1 === player.pos.y) {
+          colliding = true;
+          shapesMatch = this.shape === this.grid.getShapeAt({ x: this.pos.x, y: this.pos.y + 1 });
+        }
+      }
+    }
+
+    return colliding && (shouldShapesMatch === shapesMatch);
   }
 }
 
@@ -120,9 +151,9 @@ class PlayerGridEntity extends GridEntity {
     this.lastDown = down;
   }
 
-  draw(graphics) {
+  draw(graphics, pulse) {
     this.color = ShapeColors[this.grid.getShapeAt(this.pos)];
-    super.draw(graphics);
+    super.draw(graphics, pulse);
   }
 }
 
