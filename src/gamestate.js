@@ -24,6 +24,7 @@ class GameState extends Phaser.State {
     this.load.audio('succ-beat-4', './tracks/succ-beat-4.m4a');
     this.load.audio('grid-complete', './tracks/grid-complete.m4a');
     this.load.audio('intro-loop', './tracks/intro.m4a');
+    this.load.image('logo', './images/logo.png');
   }
 
   create() {
@@ -61,6 +62,7 @@ class GameState extends Phaser.State {
     this.isWon = false;
 
     this.introTrack = this.sound.play('intro-loop', 1, true);
+    // this.logo = this.add.image(84.5 + this.scoreAreaWidth, 15, 'logo');
   }
 
   update() {
