@@ -3,13 +3,14 @@
 import { Shape, generateGrid } from './grid-util';
 
 class Grid {
-  constructor(width, height, squareSize, spacing) {
+  constructor(width, height, squareSize, spacing, xOffset) {
     this.width = width;
     this.height = height;
     this.squareSize = squareSize;
     this.spacing = spacing;
+    this.xOffset = xOffset;
     this.origin = {
-      x: 0,
+      x: xOffset,
       y: 0,
     };
 
@@ -25,7 +26,8 @@ class Grid {
   gridToPixelPos(pos) {
     const squarePlusSpace = this.squareSize + this.spacing;
     return {
-      x: pos.x * squarePlusSpace + squarePlusSpace / 2 + this.spacing + this.origin.x,
+      x: pos.x * squarePlusSpace + squarePlusSpace / 2
+         + this.spacing + this.origin.x,
       y: pos.y * squarePlusSpace + squarePlusSpace / 2 + this.spacing + this.origin.y,
     };
   }
