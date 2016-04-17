@@ -22,6 +22,7 @@ class GameState extends Phaser.State {
     this.load.audio('succ-beat-2', './tracks/succ-beat-2.m4a');
     this.load.audio('succ-beat-3', './tracks/succ-beat-3.m4a');
     this.load.audio('succ-beat-4', './tracks/succ-beat-4.m4a');
+    this.load.audio('grid-complete', './tracks/grid-complete.m4a');
   }
 
   create() {
@@ -221,6 +222,8 @@ class GameState extends Phaser.State {
     if (this.isWon) {
       return;
     }
+
+    this.sound.play('grid-complete');
 
     this.isWon = true;
     this.level += 1;
