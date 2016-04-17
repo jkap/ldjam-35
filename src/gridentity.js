@@ -5,7 +5,7 @@ import { Phaser } from 'phaser';
 import { Shape } from 'grid';
 
 class GridEntity {
-  constructor(game, grid, pos, color) {
+  constructor(game, grid, pos, color, shape) {
     this.game = game;
     this.grid = grid;
 
@@ -13,6 +13,8 @@ class GridEntity {
     this.pos = pos;
 
     this.color = color;
+
+    this.shape = shape;
   }
 
   advance() {
@@ -28,7 +30,7 @@ class GridEntity {
     const pixpos = this.grid.gridToPixelPos(this.pos);
 
     graphics.beginFill(this.color);
-    switch (this.grid.getShapeAt(this.pos)) {
+    switch (this.shape || this.grid.getShapeAt(this.pos)) {
       case Shape.SQUARE:
         graphics.drawRect(pixpos.x - size / 2,
                           pixpos.y - size / 2,
