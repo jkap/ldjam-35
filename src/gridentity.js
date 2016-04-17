@@ -56,13 +56,14 @@ class EnemyGridEntity extends GridEntity {
     super(game, grid, pos, color, shape);
   }
 
-  advance(tweenTime) {
+  advance(beatTime) {
     this.fakePos = {
       x: this.pos.x,
       y: this.pos.y,
     };
     this.game.add.tween(this.fakePos)
-                 .to({ y: this.pos.y + 1 }, tweenTime, Phaser.Easing.Circular.InOut, true)
+                 .delay(beatTime * (1 / 2))
+                 .to({ y: this.pos.y + 1 }, beatTime / 2, Phaser.Easing.Circular.InOut, true)
                  .onComplete.add(() => {
                    this.pos.y = this.fakePos.y;
                    this.fakePos = null;
@@ -150,9 +151,9 @@ class PlayerGridEntity extends GridEntity {
     this.lastDown = down;
   }
 
-  draw(graphics) {
+  draw(graphics, pulse) {
     this.color = ShapeColors[this.grid.getShapeAt(this.pos)];
-    super.draw(graphics);
+    super.draw(graphics, pulse);
   }
 }
 
