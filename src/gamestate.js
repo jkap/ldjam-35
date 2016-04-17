@@ -27,8 +27,8 @@ class GameState extends Phaser.State {
   create() {
     this.scoreAreaWidth = 35;
 
-    this.grid = new Grid(3, 8, 75, 10, this.scoreAreaWidth, this.level);
     this.level = 0;
+    this.grid = new Grid(3, 2, 75, 10, this.scoreAreaWidth, this.level);
     this.grid.origin = {
       x: this.scoreAreaWidth,
       y: 700 - 190,
