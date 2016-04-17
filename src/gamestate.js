@@ -86,6 +86,8 @@ class GameState extends Phaser.State {
         return enemy;
       }));
     }
+
+    this.enemies = this.enemies.filter(enemy => enemy.pos.y < 8);
   }
 
   playTrack(track) {
