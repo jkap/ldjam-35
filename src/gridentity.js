@@ -126,7 +126,28 @@ class PlayerGridEntity extends GridEntity {
 
   draw(graphics, pulse) {
     this.color = ShapeColors[this.grid.getShapeAt(this.pos)];
-    super.draw(graphics, pulse);
+
+    const dispPos = this.pos;
+    const size = this.grid.squareSize;
+    const pixpos = this.grid.gridToPixelPos(dispPos);
+    const scaledPulse = pulse * 5;
+
+    graphics.lineStyle(5, 0xFAFAFA, 1);
+    graphics.beginFill(this.color);
+    switch (this.grid.getShapeAt(dispPos)) {
+      case Shape.SQUARE:
+        graphics.drawRect(pixpos.x - size / 2 - scaledPulse / 2,
+                          pixpos.y - size / 2 - scaledPulse / 2,
+                          size + scaledPulse, size + scaledPulse);
+        break;
+      case Shape.CIRCLE:
+        graphics.drawCircle(pixpos.x, pixpos.y, size + scaledPulse);
+        break;
+      default:
+        break;
+    }
+    graphics.endFill();
+    graphics.lineStyle(0, null, 0);
   }
 }
 
