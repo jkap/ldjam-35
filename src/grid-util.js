@@ -5,6 +5,11 @@ export const Shape = {
   CIRCLE: 'CIRCLE',
 };
 
+export const ShapeColors = {
+  SQUARE: 0xFF5722,
+  CIRCLE: 0x03A9F4,
+};
+
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -43,9 +48,9 @@ function _shouldGenEnemy(probability) {
   console.log('generating');
 
   return [
-    new EnemyGridEntity(null, null, { x: 0, y: 0 }, 0xFF0000, shapes[0]),
-    new EnemyGridEntity(null, null, { x: 1, y: 0 }, 0xFF0000, shapes[1]),
-    new EnemyGridEntity(null, null, { x: 2, y: 0 }, 0xFF0000, shapes[2]),
+    new EnemyGridEntity(null, null, { x: 0, y: 0 }, shapes[0]),
+    new EnemyGridEntity(null, null, { x: 1, y: 0 }, shapes[1]),
+    new EnemyGridEntity(null, null, { x: 2, y: 0 }, shapes[2]),
   ];
 }
 

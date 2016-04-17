@@ -2,7 +2,7 @@
 
 import { Phaser } from 'phaser';
 
-import { Shape } from 'grid';
+import { Shape, ShapeColors } from 'grid-util';
 
 class GridEntity {
   constructor(game, grid, pos, color, shape) {
@@ -47,14 +47,18 @@ class GridEntity {
 }
 
 class EnemyGridEntity extends GridEntity {
+  constructor(game, grid, pos, shape) {
+    const color = ShapeColors[shape];
+    super(game, grid, pos, color, shape);
+  }
   advance() {
     this.pos.y++;
   }
 }
 
 class PlayerGridEntity extends GridEntity {
-  constructor(game, grid, pos, color) {
-    super(game, grid, pos, color);
+  constructor(game, grid, pos) {
+    super(game, grid, pos);
 
     this.lastRight = false;
     this.lastLeft = false;
@@ -101,6 +105,11 @@ class PlayerGridEntity extends GridEntity {
     this.lastLeft = left;
     this.lastUp = up;
     this.lastDown = down;
+  }
+
+  draw(graphics) {
+    this.color = ShapeColors[this.grid.getShapeAt(this.pos)];
+    super.draw(graphics);
   }
 }
 

@@ -72,6 +72,11 @@ class GameState extends Phaser.State {
   render() {
     this.graphics.clear();
 
+    // Do the background color
+    this.graphics.beginFill(0x212121);
+    this.graphics.drawRect(0, 0, this.game.width, this.game.height);
+    this.graphics.endFill();
+
     this.grid.draw(this.graphics);
 
     this.player.draw(this.graphics);
@@ -104,7 +109,7 @@ class GameState extends Phaser.State {
 
   youLose() {
     // TODO ????
-    console.log("*sad trombone sound*");
+    console.log('*sad trombone sound*');
   }
 }
 
