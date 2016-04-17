@@ -19,6 +19,9 @@ class GameState extends Phaser.State {
       });
     this.load.audio('fail-sound', './tracks/fail.m4a');
     this.load.audio('succ-beat-1', './tracks/succ-beat-1.m4a');
+    this.load.audio('succ-beat-2', './tracks/succ-beat-2.m4a');
+    this.load.audio('succ-beat-3', './tracks/succ-beat-3.m4a');
+    this.load.audio('succ-beat-4', './tracks/succ-beat-4.m4a');
   }
 
   create() {
@@ -33,9 +36,12 @@ class GameState extends Phaser.State {
     this.graphics = this.game.add.graphics(0, 0);
     window.graphics = this.graphics;
 
-    this.succSounds = {
-      1: this.sound.add('succ-beat-1')
-    };
+    this.succSounds = [
+      this.sound.add('succ-beat-1'),
+      this.sound.add('succ-beat-2'),
+      this.sound.add('succ-beat-3'),
+      this.sound.add('succ-beat-4'),
+    ];
   }
 
   update() {
@@ -129,8 +135,9 @@ class GameState extends Phaser.State {
   }
 
   passThrough() {
-    if (!this.succSounds[1].isPlaying) {
-      this.succSounds[1].play();
+    if (!this.succSounds.some(sound => sound.isPlaying)) {
+      console.log(this.currentBeat);
+      this.succSounds[this.currentBeat % 4].play();
     }
   }
 }
