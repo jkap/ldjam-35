@@ -29,6 +29,8 @@ class GameState extends Phaser.State {
     this.scoreAreaWidth = 35;
 
     this.level = 0;
+    this.highScore = parseInt(localStorage.highScore) || 0;
+
     this.grid = new Grid(3, 2, 75, 10, this.scoreAreaWidth, this.level);
     this.grid.origin = {
       x: this.scoreAreaWidth,
@@ -168,15 +170,32 @@ class GameState extends Phaser.State {
     const spacing = 3;
     const height = 7;
 
+    // High score ~~~ghosts~~~
+    let curTop = botRight.y - height;
+
+    this.graphics.beginFill(0x212121);
+    this.graphics.lineStyle(1, 0xFAFAFA, 1);
+    for (let i = 1; i <= this.highScore; i++) {
+      this.graphics.drawRect(0, curTop,
+                             this.scoreAreaWidth - 2, height - 1);
+      curTop -= height + spacing;
+      if (i % 5 === 0) {
+        curTop -= height;
+      }
+    }
+    this.graphics.endFill();
+    this.graphics.lineStyle(0, null, 0);
+
+    curTop = botRight.y - height;
+
     this.graphics.beginFill(0xFAFAFA);
     for (let i = 1; i <= this.level; i++) {
-      const markerTopLeft = {
-        x: 0,
-        y: botRight.y - i * (height + spacing) + spacing,
-      };
-
-      this.graphics.drawRect(markerTopLeft.x, markerTopLeft.y,
+      this.graphics.drawRect(0, curTop,
                              this.scoreAreaWidth - 1, height);
+      curTop -= height + spacing;
+      if (i % 5 === 0) {
+        curTop -= height;
+      }
     }
     this.graphics.endFill();
   }
@@ -214,6 +233,7 @@ class GameState extends Phaser.State {
 
   youLose() {
     if (!this.ulost) {
+      this.maybeSetHighScore();
       this.ulost = true;
       this.sound.stopAll();
       this.sound.stopAll();
@@ -296,6 +316,18 @@ class GameState extends Phaser.State {
       }
 
       this.succSounds[currentBeat % 4].play('', delay);
+    }
+  }
+
+  maybeSetHighScore() {
+    const highScore = localStorage.highScore;
+
+    if (highScore) {
+      if (parseInt(highScore, 10) < this.level) {
+        localStorage.highScore = this.level;
+      }
+    } else {
+      localStorage.highScore = this.level;
     }
   }
 }
