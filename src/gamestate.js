@@ -85,6 +85,14 @@ class GameState extends Phaser.State {
     return comp(beat) || comp(beat + 1);
   }
 
+  /**
+   * Returns a value 0 to 1 based on nearby beats. To be used for pulsating things
+   */
+  getPulse(bpm = this.track.bpm, beat = this.currentBeat,
+           timestamp = this.track.sound.currentTime) {
+    return (timestamp - beat * timeUtil.msPerBeat(bpm)) / timeUtil.msPerBeat(bpm);
+  }
+
   render() {
     this.graphics.clear();
 
@@ -93,7 +101,8 @@ class GameState extends Phaser.State {
     this.graphics.drawRect(0, 0, this.game.width, this.game.height);
     this.graphics.endFill();
 
-    this.grid.draw(this.graphics);
+    if (this.track)
+      this.grid.draw(this.graphics, this.getPulse());
 
     this.player.draw(this.graphics);
     this.enemies.forEach(enemy => {

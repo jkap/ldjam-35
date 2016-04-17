@@ -48,18 +48,21 @@ class Grid {
     };
   }
 
-  draw(graphics) {
+  draw(graphics, pulse) {
+    const scaledPulse = pulse * 5;
     graphics.beginFill(0xFAFAFA);
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const pos = this.gridToPixelPos({ x: x, y: y });
         switch (this.getShapeAt({ x: x, y: y })) {
           case Shape.SQUARE:
-            graphics.drawRect(pos.x - this.squareSize / 2, pos.y - this.squareSize / 2,
-                              this.squareSize, this.squareSize);
+            const halfPulse = scaledPulse / 2;
+            graphics.drawRect(pos.x - this.squareSize / 2 - halfPulse,
+                              pos.y - this.squareSize / 2 - halfPulse,
+                              this.squareSize + scaledPulse, this.squareSize + scaledPulse);
             break;
           case Shape.CIRCLE:
-            graphics.drawCircle(pos.x, pos.y, this.squareSize);
+            graphics.drawCircle(pos.x, pos.y, this.squareSize + scaledPulse);
             break;
           default:
             break;
