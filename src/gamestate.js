@@ -109,9 +109,9 @@ class GameState extends Phaser.State {
     // Do the outline
     this.graphics.lineStyle(1, 0xFAFAFA, 1);
     this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(this.gameSize.width, 0);
-    this.graphics.lineTo(this.gameSize.width, this.gameSize.height);
-    this.graphics.lineTo(0, this.gameSize.height);
+    this.graphics.lineTo(this.gameSize.width - 1, 0);
+    this.graphics.lineTo(this.gameSize.width - 1, this.gameSize.height - 1);
+    this.graphics.lineTo(0, this.gameSize.height - 1);
     this.graphics.lineTo(0, 0);
     this.graphics.lineStyle(0, null, 0);
 
