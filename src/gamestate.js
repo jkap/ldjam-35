@@ -184,7 +184,7 @@ class GameState extends Phaser.State {
     const height = 7;
 
     // High score ~~~ghosts~~~
-    let curTop = botRight.y - height;
+    let curTop = botRight.y - height + 1;
 
     this.graphics.beginFill(0x212121);
     this.graphics.lineStyle(1, 0xFAFAFA, 1);
@@ -199,7 +199,7 @@ class GameState extends Phaser.State {
     this.graphics.endFill();
     this.graphics.lineStyle(0, null, 0);
 
-    curTop = botRight.y - height;
+    curTop = botRight.y - height + 1;
 
     this.graphics.beginFill(0xFAFAFA);
     for (let i = 1; i <= this.level; i++) {
