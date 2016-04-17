@@ -30,7 +30,7 @@ class GameState extends Phaser.State {
     this.game.scale.setGameSize(gridSize.width * 2, gridSize.height);
     this.gameSize = Object.assign({}, gridSize);
 
-    this.level = 1;
+    this.level = 0;
     this.player = new PlayerGridEntity(this.game, this.grid, { x: 0, y: 7 }, 0x00FF00);
     this.enemyGenerator = generateEnemy(this.level);
     this.enemies = [];
