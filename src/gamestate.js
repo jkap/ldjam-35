@@ -200,7 +200,7 @@ class GameState extends Phaser.State {
       y: 7,
     };
 
-    const tweenTime = timeUtil.msPerBeat(this.track.bpm) * 2;
+    const tweenTime = timeUtil.msPerBeat(this.track.bpm) * (4 / 3);
     const easing = Phaser.Easing.Circular.InOut;
 
     this.game.add.tween(this.gameSize)
@@ -215,7 +215,6 @@ class GameState extends Phaser.State {
               .to({ width: this.gameSize.width / 2 }, tweenTime, easing, true)
               .onComplete.add(() => {
                 this.isWon = false;
-                this.enemyGenerator = generateEnemy();
               });
           });
 
@@ -229,6 +228,7 @@ class GameState extends Phaser.State {
 
     this.enemies = [];
     this.enemyGenerator.return();
+    this.enemyGenerator = generateEnemy();
   }
 
   passThrough() {
