@@ -101,6 +101,8 @@ class GameState extends Phaser.State {
   render() {
     this.graphics.clear();
 
+    if (!this.track) return;
+
     // Do the background color
     this.graphics.beginFill(0x212121);
     this.graphics.drawRect(0, 0, this.game.width, this.game.height);
@@ -115,17 +117,15 @@ class GameState extends Phaser.State {
     this.graphics.lineTo(0, 0);
     this.graphics.lineStyle(0, null, 0);
 
-    if (this.track) {
-      this.grid.draw(this.graphics, this.getPulse(), this.gridOrigin);
+    this.grid.draw(this.graphics, this.getPulse(), this.gridOrigin);
 
-      if (this.oldGrid) {
-        this.oldGrid.draw(this.graphics, this.getPulse(), this.oldGridOrigin);
-      }
+    if (this.oldGrid) {
+      this.oldGrid.draw(this.graphics, this.getPulse(), this.oldGridOrigin);
     }
 
-    this.player.draw(this.graphics);
+    this.player.draw(this.graphics, this.getPulse());
     this.enemies.forEach(enemy => {
-      enemy.draw(this.graphics);
+      enemy.draw(this.graphics, this.getPulse());
     });
 
     this.graphics.beginFill(0x212121);

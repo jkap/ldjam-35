@@ -28,20 +28,21 @@ class GridEntity {
 
   }
 
-  draw(graphics) {
+  draw(graphics, pulse) {
     const dispPos = this.fakePos || this.pos;
     const size = this.grid.squareSize;
     const pixpos = this.grid.gridToPixelPos(dispPos);
+    const scaledPulse = pulse * 5;
 
     graphics.beginFill(this.color);
     switch (this.shape || this.grid.getShapeAt(dispPos)) {
       case Shape.SQUARE:
-        graphics.drawRect(pixpos.x - size / 2,
-                          pixpos.y - size / 2,
-                          size, size);
+        graphics.drawRect(pixpos.x - size / 2 - scaledPulse / 2,
+                          pixpos.y - size / 2 - scaledPulse / 2,
+                          size + scaledPulse, size + scaledPulse);
         break;
       case Shape.CIRCLE:
-        graphics.drawCircle(pixpos.x, pixpos.y, size);
+        graphics.drawCircle(pixpos.x, pixpos.y, size + scaledPulse);
         break;
       default:
         break;
