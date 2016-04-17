@@ -114,7 +114,7 @@ class GameState extends Phaser.State {
    */
   getPulse(bpm = this.track.bpm, beat = this.currentBeat,
            timestamp = this.track.sound.currentTime) {
-    return (timestamp - beat * timeUtil.msPerBeat(bpm)) / timeUtil.msPerBeat(bpm);
+    return ((beat + 1) * timeUtil.msPerBeat(bpm) - timestamp) / timeUtil.msPerBeat(bpm);
   }
 
   render() {
