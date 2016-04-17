@@ -81,6 +81,10 @@ class GameState extends Phaser.State {
       }
     });
 
+    if (this.ulost) {
+      return;
+    }
+
     // Check win state
     if ((!this.level && this.player.pos.y === 0 && this.player.pos.x === this.grid.width - 1) ||
         (this.level > 0 && this.player.pos.y === 1 && this.player.pos.x === this.grid.width - 1)) {
