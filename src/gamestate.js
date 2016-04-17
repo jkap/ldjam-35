@@ -4,7 +4,7 @@ import { Phaser } from 'phaser';
 import { TrackManager } from './track-manager';
 
 import { Grid } from 'grid';
-import { PlayerGridEntity, EnemyGridEntity } from 'gridentity';
+import { PlayerGridEntity } from 'gridentity';
 
 import { generateEnemy } from './grid-util';
 
@@ -43,6 +43,16 @@ class GameState extends Phaser.State {
       }
     }
 
+    // Check collisions
+    this.enemies.forEach(enemy => {
+      if (enemy.pos.x === this.player.pos.x && enemy.pos.y === this.player.pos.y) {
+        // On the same tile, are you the same shape?
+        if (enemy.shape !== this.grid.getShapeAt(enemy.pos)) {
+          this.youLose();
+        }
+      }
+    });
+
     this.player.update();
   }
 
@@ -76,7 +86,6 @@ class GameState extends Phaser.State {
     });
 
     const enemies = this.enemyGenerator.next();
-    console.log(enemies);
     if (enemies.value !== null) {
       this.enemies = this.enemies.concat(enemies.value.map(enemy => {
         Object.assign(enemy, {
@@ -91,6 +100,11 @@ class GameState extends Phaser.State {
   playTrack(track) {
     this.track.sound = this.sound.play(track.key);
     this.currentBeat = 0;
+  }
+
+  youLose() {
+    // TODO ????
+    console.log("*sad trombone sound*");
   }
 }
 
