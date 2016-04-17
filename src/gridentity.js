@@ -109,6 +109,9 @@ class PlayerGridEntity extends GridEntity {
     this.lastLeft = false;
     this.lastUp = false;
     this.lastDown = false;
+
+    // If the player has already moved during this beat, don't let them move again
+    this.movedThisWindow = false;
   }
 
   update() {
@@ -119,28 +122,37 @@ class PlayerGridEntity extends GridEntity {
     const left = this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT);
     const up = this.game.input.keyboard.isDown(Phaser.Keyboard.UP);
     const down = this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN);
+    const nailedIt = this.game.state.getCurrentState().inputWithinWindow();
+
+    if (!nailedIt) {
+      this.movedThisWindow = false;
+    }
 
     if (right && !this.lastRight) {
       tryToMove = true;
       targetPos.x = Math.min(targetPos.x + 1, this.grid.width - 1);
+      targetPos.y = this.pos.y;
     }
     if (left && !this.lastLeft) {
       tryToMove = true;
       targetPos.x = Math.max(targetPos.x - 1, 0);
+      targetPos.y = this.pos.y;
     }
     if (up && !this.lastUp) {
       tryToMove = true;
+      targetPos.x = this.pos.x;
       targetPos.y = Math.max(targetPos.y - 1, 0);
     }
     if (down && !this.lastDown) {
       tryToMove = true;
+      targetPos.x = this.pos.x;
       targetPos.y = Math.min(targetPos.y + 1, this.grid.height - 1);
     }
 
     if (tryToMove) {
-      const nailedIt = this.game.state.getCurrentState().inputWithinWindow();
-      if (nailedIt) {
+      if (nailedIt && !this.movedThisWindow) {
         this.pos = targetPos;
+        this.movedThisWindow = true;
       } else {
         // TODO: ooooops you messed up
       }
