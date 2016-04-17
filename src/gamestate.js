@@ -44,6 +44,7 @@ class GameState extends Phaser.State {
     ];
 
     this.ulost = false;
+    this.isWon = false;
   }
 
   update() {
@@ -68,6 +69,11 @@ class GameState extends Phaser.State {
         }
       }
     });
+
+    // Check win state
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+      this.handleWin();
+    }
 
     this.player.update();
   }
@@ -101,8 +107,17 @@ class GameState extends Phaser.State {
     this.graphics.drawRect(0, 0, this.game.width, this.game.height);
     this.graphics.endFill();
 
-    if (this.track)
+    if (this.track) {
       this.grid.draw(this.graphics, this.getPulse());
+
+      if (this.newGrid) {
+        const gridSize = this.newGrid.getSize();
+        this.newGrid.draw(this.graphics, this.getPulse(), {
+          x: gridSize.width,
+          y: 0,
+        });
+      }
+    }
 
     this.player.draw(this.graphics);
     this.enemies.forEach(enemy => {
@@ -141,6 +156,18 @@ class GameState extends Phaser.State {
       this.sound.play('fail-sound');
       this.state.restart();
     }
+  }
+
+  handleWin() {
+    if (this.isWon) {
+      return;
+    }
+
+    this.isWon = true;
+    const gridSize = this.grid.getSize();
+    this.game.scale.setGameSize(gridSize.width * 2, gridSize.height);
+    this.newGrid = new Grid(3, 8, 75, 10);
+    console.log(this.newGrid);
   }
 
   passThrough() {

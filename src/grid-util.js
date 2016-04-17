@@ -26,9 +26,7 @@ export function* generateGrid(num, difficulty) {
 function _shouldGenEnemy(probability) {
   const dice = Math.random();
   const shapes = [];
-  console.log(dice, probability);
   if (dice > probability) {
-    console.log('no dice');
     return null;
   }
 
@@ -45,8 +43,6 @@ function _shouldGenEnemy(probability) {
     shapes.push(shape, shape, shape);
   }
 
-  console.log('generating');
-
   return [
     new EnemyGridEntity(null, null, { x: 0, y: 0 }, shapes[0]),
     new EnemyGridEntity(null, null, { x: 1, y: 0 }, shapes[1]),
@@ -60,8 +56,6 @@ export function* generateEnemy() {
 
   while (true) {
     rowsSinceLast += 1;
-
-    console.log(rowsSinceLast);
 
     if (rowsSinceLast <= 1) {
       yield null;
