@@ -97,7 +97,9 @@ function getProbabilityHard(rowsSinceLast) {
 }
 
 function getProbability(level, rowsSinceLast) {
-  if (level <= 5) {
+  if (level === 0) {
+    return 0;
+  } else if (level <= 5) {
     return getProbabilityEasy(rowsSinceLast);
   } else if (level <= 10) {
     return getProbabilityMedium(rowsSinceLast);
