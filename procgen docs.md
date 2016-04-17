@@ -16,3 +16,15 @@
 ## picking grid
 - completely random? lol
   - just a dice roll for each grid spot to make the grid
+
+## rows since last enemy:
+
+| Rows since last enemy | Probability of enemy |
+|-----------------------|----------------------|
+| 0-1                   | 0%                   |
+| 2                     | 5%                   |
+| 3                     | 10%                  |
+| 4                     | 25%                  |
+| 5                     | 50%                  |
+| 6                     | 75%                  |
+| 7+                    | 100%                 |

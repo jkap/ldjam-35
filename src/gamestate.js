@@ -6,6 +6,8 @@ import { TrackManager } from './track-manager';
 import { Grid } from 'grid';
 import { PlayerGridEntity, EnemyGridEntity } from 'gridentity';
 
+import { generateEnemy } from './grid-util';
+
 import * as timeUtil from './time-util';
 
 class GameState extends Phaser.State {
@@ -23,7 +25,8 @@ class GameState extends Phaser.State {
     this.game.scale.setGameSize(gridSize.width, gridSize.height);
 
     this.player = new PlayerGridEntity(this.game, this.grid, { x: 0, y: 7 }, 0x00FF00);
-    this.enemy = new EnemyGridEntity(this.game, this.grid, { x: 0, y: 0 }, 0xFF0000);
+    this.enemyGenerator = generateEnemy();
+    this.enemies = [];
 
     this.graphics = this.game.add.graphics(0, 0);
     window.graphics = this.graphics;
@@ -45,7 +48,6 @@ class GameState extends Phaser.State {
 
   inputWithinWindow(bpm = this.track.bpm, beat = this.currentBeat,
                     timestamp = this.track.sound.currentTime) {
-    console.log(bpm, beat, timestamp);
     const beatWindow = 75;
 
     function comp(_beat) {
@@ -63,11 +65,27 @@ class GameState extends Phaser.State {
     this.grid.draw(this.graphics);
 
     this.player.draw(this.graphics);
-    this.enemy.draw(this.graphics);
+    this.enemies.forEach(enemy => {
+      enemy.draw(this.graphics);
+    });
   }
 
   advance() {
-    this.enemy.advance();
+    this.enemies.forEach(enemy => {
+      enemy.advance();
+    });
+
+    const enemies = this.enemyGenerator.next();
+    console.log(enemies);
+    if (enemies.value !== null) {
+      this.enemies = this.enemies.concat(enemies.value.map(enemy => {
+        Object.assign(enemy, {
+          game: this.game,
+          grid: this.grid,
+        });
+        return enemy;
+      }));
+    }
   }
 
   playTrack(track) {
