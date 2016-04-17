@@ -112,7 +112,7 @@ class GameState extends Phaser.State {
 
   advance() {
     this.enemies.forEach(enemy => {
-      enemy.advance();
+      enemy.advance(timeUtil.msPerBeat(this.track.bpm));
     });
 
     const enemies = this.enemyGenerator.next();

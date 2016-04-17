@@ -9,15 +9,18 @@ class GridEntity {
     this.game = game;
     this.grid = grid;
 
-    // Position on the grid
+    // 'real' position on the grid (for collisions and stuff)
     this.pos = pos;
+
+    // 'fake' position on the grid (for drawing and stuff)
+    this.fakePos = null;
 
     this.color = color;
 
     this.shape = shape;
   }
 
-  advance() {
+  advance(tweenTime) {
 
   }
 
@@ -26,11 +29,12 @@ class GridEntity {
   }
 
   draw(graphics) {
+    const dispPos = this.fakePos || this.pos;
     const size = this.grid.squareSize;
-    const pixpos = this.grid.gridToPixelPos(this.pos);
+    const pixpos = this.grid.gridToPixelPos(dispPos);
 
     graphics.beginFill(this.color);
-    switch (this.shape || this.grid.getShapeAt(this.pos)) {
+    switch (this.shape || this.grid.getShapeAt(dispPos)) {
       case Shape.SQUARE:
         graphics.drawRect(pixpos.x - size / 2,
                           pixpos.y - size / 2,
@@ -51,8 +55,17 @@ class EnemyGridEntity extends GridEntity {
     const color = ShapeColors[shape];
     super(game, grid, pos, color, shape);
   }
-  advance() {
-    this.pos.y++;
+  advance(tweenTime) {
+    this.fakePos = {
+      x: this.pos.x,
+      y: this.pos.y,
+    };
+    this.game.add.tween(this.fakePos)
+                 .to({ y: this.pos.y + 1 }, tweenTime, Phaser.Easing.Circular.InOut, true)
+                 .onComplete.add(() => {
+                   this.pos.y = this.fakePos.y;
+                   this.fakePos = null;
+                 });
   }
 }
 
