@@ -56,7 +56,7 @@ class GameState extends Phaser.State {
 
     if (this.track.sound.isPlaying) {
       const beat = Math.floor(this.track.sound.currentTime / timeUtil.msPerBeat(this.track.bpm));
-      if (beat > this.currentBeat) {
+      if (beat !== this.currentBeat) {
         if (beat % 2 === 1) {
           this.advance();
         }
@@ -189,7 +189,14 @@ class GameState extends Phaser.State {
   }
 
   playTrack(track) {
-    this.track.sound = this.sound.play(track.key);
+    this.track.sound = this.sound.add(track.key);
+    this.track.sound.addMarker('intro', 0, 40, 1, true);
+    this.track.sound.addMarker('loop', 40, 64);
+    this.track.sound.play('intro');
+    this.track.sound.onMarkerComplete.add(() => {
+      console.log('looping');
+      this.track.sound.play('loop');
+    });
     this.currentBeat = 0;
   }
 
