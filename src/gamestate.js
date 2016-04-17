@@ -27,7 +27,8 @@ class GameState extends Phaser.State {
   create() {
     this.grid = new Grid(3, 8, 75, 10);
     const gridSize = this.grid.getSize();
-    this.game.scale.setGameSize(gridSize.width, gridSize.height);
+    this.game.scale.setGameSize(gridSize.width * 2, gridSize.height);
+    this.gameSize = Object.assign({}, gridSize);
 
     this.player = new PlayerGridEntity(this.game, this.grid, { x: 0, y: 7 }, 0x00FF00);
     this.enemyGenerator = generateEnemy();
@@ -107,15 +108,20 @@ class GameState extends Phaser.State {
     this.graphics.drawRect(0, 0, this.game.width, this.game.height);
     this.graphics.endFill();
 
-    if (this.track) {
-      this.grid.draw(this.graphics, this.getPulse());
+    // Do the outline
+    this.graphics.lineStyle(1, 0xFAFAFA, 1);
+    this.graphics.moveTo(0, 0);
+    this.graphics.lineTo(this.gameSize.width, 0);
+    this.graphics.lineTo(this.gameSize.width, this.gameSize.height);
+    this.graphics.lineTo(0, this.gameSize.height);
+    this.graphics.lineTo(0, 0);
+    this.graphics.lineStyle(0, null, 0);
 
-      if (this.newGrid) {
-        const gridSize = this.newGrid.getSize();
-        this.newGrid.draw(this.graphics, this.getPulse(), {
-          x: gridSize.width,
-          y: 0,
-        });
+    if (this.track) {
+      this.grid.draw(this.graphics, this.getPulse(), this.gridOrigin);
+
+      if (this.oldGrid) {
+        this.oldGrid.draw(this.graphics, this.getPulse(), this.oldGridOrigin);
       }
     }
 
@@ -123,6 +129,10 @@ class GameState extends Phaser.State {
     this.enemies.forEach(enemy => {
       enemy.draw(this.graphics);
     });
+
+    this.graphics.beginFill(0x212121);
+    this.graphics.drawRect(this.gameSize.width, 0, this.game.width, this.game.height);
+    this.graphics.endFill();
   }
 
   advance() {
@@ -131,7 +141,7 @@ class GameState extends Phaser.State {
     });
 
     const enemies = this.enemyGenerator.next();
-    if (enemies.value !== null) {
+    if (enemies.value) {
       this.enemies = this.enemies.concat(enemies.value.map(enemy => {
         Object.assign(enemy, {
           game: this.game,
@@ -165,9 +175,45 @@ class GameState extends Phaser.State {
 
     this.isWon = true;
     const gridSize = this.grid.getSize();
-    this.game.scale.setGameSize(gridSize.width * 2, gridSize.height);
-    this.newGrid = new Grid(3, 8, 75, 10);
-    console.log(this.newGrid);
+    this.oldGrid = this.grid;
+    this.grid = new Grid(3, 8, 75, 10);
+    this.gridOrigin = {
+      x: gridSize.width,
+      y: -gridSize.height + 105,
+    };
+    this.oldGridOrigin = {
+      x: 0,
+      y: 0,
+    };
+
+    this.player.grid = this.grid;
+
+    const tweenTime = timeUtil.msPerBeat(this.track.bpm) * 2;
+    const easing = Phaser.Easing.Circular.InOut;
+
+    this.game.add.tween(this.gameSize)
+      .to({ width: this.gameSize.width * 2 }, tweenTime, easing, true)
+      .onComplete.add(() => {
+        this.game.add.tween(this.gridOrigin)
+          .to({ y: 0 }, tweenTime, easing, true)
+          .onComplete.add(() => {
+            this.game.add.tween(this.gridOrigin)
+              .to({ x: 0 }, tweenTime, easing, true);
+            this.game.add.tween(this.gameSize)
+              .to({ width: this.gameSize.width / 2 }, tweenTime, easing, true);
+          });
+
+        this.game.add.tween(this.oldGridOrigin)
+          .to({ y: gridSize.height - 105 }, tweenTime, easing, true)
+          .onComplete.add(() => {
+            this.game.add.tween(this.oldGridOrigin)
+              .to({ x: -gridSize.width }, tweenTime, easing, true);
+          });
+      });
+
+    this.enemies = [];
+    this.enemyGenerator.return();
+    console.log(this.oldGrid);
   }
 
   passThrough() {
