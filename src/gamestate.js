@@ -133,10 +133,10 @@ class GameState extends Phaser.State {
       this.oldGrid.draw(this.graphics, this.getPulse());
     }
 
+    this.player.draw(this.graphics, this.getPulse());
     this.enemies.forEach(enemy => {
       enemy.draw(this.graphics, this.getPulse());
     });
-    this.player.draw(this.graphics, this.getPulse());
 
     this.graphics.beginFill(0x212121);
     this.graphics.drawRect(this.gameSize.width, 0, this.game.width, this.game.height);

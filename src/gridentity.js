@@ -4,6 +4,9 @@ import { Phaser } from 'phaser';
 
 import { Shape, ShapeColors } from 'grid-util';
 
+// How wide the enemies are/how much smaller player should be
+const LINEWIDTH = 5;
+
 class GridEntity {
   constructor(game, grid, pos, color, shape) {
     this.game = game;
@@ -59,6 +62,31 @@ class EnemyGridEntity extends GridEntity {
 
   advance() {
     this.pos.y++;
+  }
+
+  draw(graphics, pulse) {
+    const dispPos = this.pos;
+    const size = this.grid.squareSize;
+    const pixpos = this.grid.gridToPixelPos(dispPos);
+    const scaledPulse = pulse * 5;
+
+    graphics.lineStyle(LINEWIDTH, this.color, 1);
+    graphics.beginFill(0xFAFAFA);
+    graphics.fillAlpha = 0;
+    switch (this.shape) {
+      case Shape.SQUARE:
+        graphics.drawRect(pixpos.x - size / 2 - scaledPulse / 2,
+                          pixpos.y - size / 2 - scaledPulse / 2,
+                          size + scaledPulse, size + scaledPulse);
+        break;
+      case Shape.CIRCLE:
+        graphics.drawCircle(pixpos.x, pixpos.y, size + scaledPulse);
+        break;
+      default:
+        break;
+    }
+    graphics.endFill();
+    graphics.lineStyle(0, null, 0);
   }
 
   collides(player, shouldShapesMatch) {
@@ -132,7 +160,7 @@ class PlayerGridEntity extends GridEntity {
     const pixpos = this.grid.gridToPixelPos(dispPos);
     const scaledPulse = pulse * 5;
 
-    graphics.lineStyle(5, 0xFAFAFA, 1);
+    graphics.lineStyle(LINEWIDTH, 0xFAFAFA, 1);
     graphics.beginFill(this.color);
     switch (this.grid.getShapeAt(dispPos)) {
       case Shape.SQUARE:
