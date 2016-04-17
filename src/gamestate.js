@@ -25,10 +25,12 @@ class GameState extends Phaser.State {
   }
 
   create() {
+    this.scoreAreaWidth = 35;
+
+    this.grid = new Grid(3, 8, 75, 10, this.scoreAreaWidth, this.level);
     this.level = 0;
-    this.grid = new Grid(3, 2, 75, 10, this.level);
     this.grid.origin = {
-      x: 0,
+      x: this.scoreAreaWidth,
       y: 700 - 190,
     }
     this.game.scale.setGameSize(275 * 2, 700);
@@ -121,11 +123,11 @@ class GameState extends Phaser.State {
     // Do the outline
     const pulse = this.getPulse() * 2;
     const topLeft = {
-      x: 2 - pulse,
+      x: 2 - pulse + this.scoreAreaWidth,
       y: 2 - pulse,
     };
     const botRight = {
-      x: this.gameSize.width - 1 - (2 - pulse),
+      x: this.scoreAreaWidth + this.gameSize.width - 1 - (2 - pulse),
       y: this.gameSize.height - 1 - (2 - pulse),
     };
 
@@ -149,7 +151,28 @@ class GameState extends Phaser.State {
     });
 
     this.graphics.beginFill(0x212121);
-    this.graphics.drawRect(this.gameSize.width, 0, this.game.width, this.game.height);
+    this.graphics.drawRect(this.gameSize.width + this.scoreAreaWidth, 0,
+                           this.game.width, this.game.height);
+    this.graphics.endFill();
+
+    this.graphics.beginFill(0x212121);
+    this.graphics.drawRect(0, 0, this.scoreAreaWidth, this.game.height);
+    this.graphics.endFill();
+
+    // Draw score area
+    const spacing = 3;
+    const height = 7;
+
+    this.graphics.beginFill(0xFAFAFA);
+    for (let i = 1; i <= this.level; i++) {
+      const markerTopLeft = {
+        x: 0,
+        y: botRight.y - i * (height + spacing) + spacing,
+      };
+
+      this.graphics.drawRect(markerTopLeft.x, markerTopLeft.y,
+                             this.scoreAreaWidth - 1, height);
+    }
     this.graphics.endFill();
   }
 
@@ -202,16 +225,16 @@ class GameState extends Phaser.State {
     this.isWon = true;
     this.level += 1;
     this.oldGrid = this.grid;
-    this.grid = new Grid(3, 8, 75, 10, this.level);
+    this.grid = new Grid(3, 8, 75, 10, this.scoreAreaWidth, this.level);
     const gridSize = this.grid.getSize();
     if (this.level === 1) {
       this.grid.origin = {
-        x: gridSize.width,
+        x: this.scoreAreaWidth + gridSize.width,
         y: -95,
       }
     } else {
       this.grid.origin = {
-        x: gridSize.width,
+        x: this.scoreAreaWidth + gridSize.width,
         y: -gridSize.height + 190,
       };
     }
@@ -233,7 +256,7 @@ class GameState extends Phaser.State {
           .to({ y: 0 }, tweenTime, easing, true)
           .onComplete.add(() => {
             this.game.add.tween(this.grid.origin)
-              .to({ x: 0 }, tweenTime, easing, true);
+              .to({ x: this.scoreAreaWidth }, tweenTime, easing, true);
             this.game.add.tween(this.gameSize)
               .to({ width: this.gameSize.width / 2 }, tweenTime, easing, true)
               .onComplete.add(() => {
