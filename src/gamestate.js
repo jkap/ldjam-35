@@ -107,7 +107,6 @@ class GameState extends Phaser.State {
 
     if (this.track) {
       this.grid.draw(this.graphics, this.getPulse());
-    }
 
       if (this.newGrid) {
         const gridSize = this.newGrid.getSize();
