@@ -30,6 +30,8 @@ class GameState extends Phaser.State {
   create() {
     this.scoreAreaWidth = 35;
 
+    this.game.stage.backgroundColor = 0x212121;
+
     this.level = 0;
     this.highScore = parseInt(localStorage.highScore, 10) || 0;
 
@@ -151,11 +153,6 @@ class GameState extends Phaser.State {
     this.graphics.clear();
 
     if (!this.track) return;
-
-    // Do the background color
-    this.graphics.beginFill(0x212121);
-    this.graphics.drawRect(0, 0, this.game.width, this.game.height);
-    this.graphics.endFill();
 
     // Do the outline
     const pulse = this.getPulse() * 2;
