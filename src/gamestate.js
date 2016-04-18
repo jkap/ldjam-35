@@ -15,7 +15,7 @@ class GameState extends Phaser.State {
     TrackManager.getTrack('track-1', this)
       .then(track => {
         this.track = track;
-        this.playTrack(track);
+        // this.playTrack(track);
       });
     this.load.audio('fail-sound', './tracks/fail.m4a');
     this.load.audio('succ-beat-1', './tracks/succ-beat-1.m4a');
@@ -23,20 +23,22 @@ class GameState extends Phaser.State {
     this.load.audio('succ-beat-3', './tracks/succ-beat-3.m4a');
     this.load.audio('succ-beat-4', './tracks/succ-beat-4.m4a');
     this.load.audio('grid-complete', './tracks/grid-complete.m4a');
+    this.load.audio('intro-loop', './tracks/intro.m4a');
+    this.load.image('logo', './images/logo.png');
   }
 
   create() {
     this.scoreAreaWidth = 35;
 
     this.level = 0;
-    this.highScore = parseInt(localStorage.highScore) || 0;
+    this.highScore = parseInt(localStorage.highScore, 10) || 0;
 
     this.grid = new Grid(3, 2, 75, 10, this.scoreAreaWidth, this.level);
     this.grid.origin = {
       x: this.scoreAreaWidth,
       y: 700 - 190,
-    }
-    this.game.scale.setGameSize(275 * 2, 700);
+    };
+    this.game.scale.setGameSize(275 * 2 + this.scoreAreaWidth, 700);
     this.gameSize = Object.assign({}, {
       width: 275,
       height: 700,
@@ -58,12 +60,31 @@ class GameState extends Phaser.State {
 
     this.ulost = false;
     this.isWon = false;
+
+    this.introTrack = this.sound.play('intro-loop', 1, true);
+    this.logo = this.add.image(137.5 + this.scoreAreaWidth, 275, 'logo');
+    this.logo.anchor = {
+      x: 0.5,
+      y: 0.5,
+    };
   }
 
   update() {
     if (!this.track) return;
 
-    if (this.track.sound.isPlaying) {
+    if (this.logo.visible) {
+      this.logo.scale.set(1 + (this.getPulse() * 0.01));
+    }
+
+    if (this.introTrack.isPlaying) {
+      const beat = Math.floor(this.introTrack.currentTime / timeUtil.msPerBeat(this.track.bpm));
+      if (beat !== this.currentBeat) {
+        if (beat % 2 === 1) {
+          this.advance();
+        }
+        this.currentBeat = beat;
+      }
+    } else if (this.track.sound.isPlaying) {
       const beat = Math.floor(this.track.sound.currentTime / timeUtil.msPerBeat(this.track.bpm));
       if (beat !== this.currentBeat) {
         if (beat % 2 === 1) {
@@ -97,7 +118,7 @@ class GameState extends Phaser.State {
   }
 
   inputWithinWindow(bpm = this.track.bpm, beat = this.currentBeat,
-                    timestamp = this.track.sound.currentTime) {
+                    timestamp = this.track.sound.currentTime || this.introTrack.currentTime) {
     const beatWindow = 75;
 
     function comp(_beat) {
@@ -113,7 +134,7 @@ class GameState extends Phaser.State {
    * Returns a value 0 to 1 based on nearby beats. To be used for pulsating things
    */
   getPulse(bpm = this.track.bpm, beat = this.currentBeat,
-           timestamp = this.track.sound.currentTime) {
+           timestamp = this.track.sound.currentTime || this.introTrack.currentTime) {
     return ((beat + 1) * timeUtil.msPerBeat(bpm) - timestamp) / timeUtil.msPerBeat(bpm);
   }
 
@@ -171,7 +192,7 @@ class GameState extends Phaser.State {
     const height = 7;
 
     // High score ~~~ghosts~~~
-    let curTop = botRight.y - height;
+    let curTop = botRight.y - height + 1;
 
     this.graphics.beginFill(0x212121);
     this.graphics.lineStyle(1, 0xFAFAFA, 1);
@@ -186,7 +207,7 @@ class GameState extends Phaser.State {
     this.graphics.endFill();
     this.graphics.lineStyle(0, null, 0);
 
-    curTop = botRight.y - height;
+    curTop = botRight.y - height + 1;
 
     this.graphics.beginFill(0xFAFAFA);
     for (let i = 1; i <= this.level; i++) {
@@ -243,6 +264,7 @@ class GameState extends Phaser.State {
   }
 
   handleWin() {
+    const easing = Phaser.Easing.Circular.InOut;
     if (this.isWon) {
       return;
     }
@@ -251,6 +273,10 @@ class GameState extends Phaser.State {
 
     this.isWon = true;
     this.level += 1;
+    if (this.level === 1) {
+      this.introTrack.stop();
+      this.playTrack(this.track);
+    }
     this.oldGrid = this.grid;
     this.grid = new Grid(3, 8, 75, 10, this.scoreAreaWidth, this.level);
     const gridSize = this.grid.getSize();
@@ -258,7 +284,7 @@ class GameState extends Phaser.State {
       this.grid.origin = {
         x: this.scoreAreaWidth + gridSize.width,
         y: -95,
-      }
+      };
     } else {
       this.grid.origin = {
         x: this.scoreAreaWidth + gridSize.width,
@@ -274,7 +300,6 @@ class GameState extends Phaser.State {
     };
 
     const tweenTime = timeUtil.msPerBeat(this.track.bpm) * (4 / 3);
-    const easing = Phaser.Easing.Circular.InOut;
 
     this.game.add.tween(this.gameSize)
       .to({ width: this.gameSize.width * 2 }, tweenTime, easing, true)
@@ -297,6 +322,12 @@ class GameState extends Phaser.State {
             this.game.add.tween(this.oldGrid.origin)
               .to({ x: -gridSize.width }, tweenTime, easing, true);
           });
+        this.game.add.tween(this.logo)
+          .to({ y: this.logo.y + 510 }, tweenTime, easing, true)
+          .onComplete.add(() => {
+            this.game.add.tween(this.logo)
+              .to({ x: this.logo.x - gridSize.width }, tweenTime, easing, true);
+          })
       });
 
     this.enemies = [];
