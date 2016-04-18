@@ -62,11 +62,19 @@ class GameState extends Phaser.State {
     this.isWon = false;
 
     this.introTrack = this.sound.play('intro-loop', 1, true);
-    // this.logo = this.add.image(84.5 + this.scoreAreaWidth, 15, 'logo');
+    this.logo = this.add.image(137.5 + this.scoreAreaWidth, 275, 'logo');
+    this.logo.anchor = {
+      x: 0.5,
+      y: 0.5,
+    };
   }
 
   update() {
     if (!this.track) return;
+
+    if (this.logo.visible) {
+      this.logo.scale.set(1 + (this.getPulse() * 0.01));
+    }
 
     if (this.introTrack.isPlaying) {
       const beat = Math.floor(this.introTrack.currentTime / timeUtil.msPerBeat(this.track.bpm));
@@ -256,6 +264,7 @@ class GameState extends Phaser.State {
   }
 
   handleWin() {
+    const easing = Phaser.Easing.Circular.InOut;
     if (this.isWon) {
       return;
     }
@@ -291,7 +300,6 @@ class GameState extends Phaser.State {
     };
 
     const tweenTime = timeUtil.msPerBeat(this.track.bpm) * (4 / 3);
-    const easing = Phaser.Easing.Circular.InOut;
 
     this.game.add.tween(this.gameSize)
       .to({ width: this.gameSize.width * 2 }, tweenTime, easing, true)
@@ -314,6 +322,12 @@ class GameState extends Phaser.State {
             this.game.add.tween(this.oldGrid.origin)
               .to({ x: -gridSize.width }, tweenTime, easing, true);
           });
+        this.game.add.tween(this.logo)
+          .to({ y: this.logo.y + 510 }, tweenTime, easing, true)
+          .onComplete.add(() => {
+            this.game.add.tween(this.logo)
+              .to({ x: this.logo.x - gridSize.width }, tweenTime, easing, true);
+          })
       });
 
     this.enemies = [];
