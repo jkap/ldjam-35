@@ -23,7 +23,7 @@ class GridEntity {
     this.shape = shape;
   }
 
-  advance(tweenTime) {
+  advance() {
 
   }
 
