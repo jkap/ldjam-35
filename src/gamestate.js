@@ -30,6 +30,8 @@ class GameState extends Phaser.State {
   create() {
     this.scoreAreaWidth = 35;
 
+    this.game.stage.backgroundColor = 0x212121;
+
     this.level = 0;
     this.highScore = parseInt(localStorage.highScore, 10) || 0;
 
@@ -38,6 +40,7 @@ class GameState extends Phaser.State {
       x: this.scoreAreaWidth,
       y: 700 - 190,
     };
+
     this.game.scale.setGameSize(275 * 2 + this.scoreAreaWidth, 700);
     this.gameSize = Object.assign({}, {
       width: 275,
@@ -67,6 +70,14 @@ class GameState extends Phaser.State {
       x: 0.5,
       y: 0.5,
     };
+
+    // Add captures so the keys don't scroll the page
+    game.input.keyboard.addKeyCapture([
+      Phaser.Keyboard.LEFT,
+      Phaser.Keyboard.RIGHT,
+      Phaser.Keyboard.UP,
+      Phaser.Keyboard.DOWN,
+    ]);
   }
 
   update() {
@@ -142,11 +153,6 @@ class GameState extends Phaser.State {
     this.graphics.clear();
 
     if (!this.track) return;
-
-    // Do the background color
-    this.graphics.beginFill(0x212121);
-    this.graphics.drawRect(0, 0, this.game.width, this.game.height);
-    this.graphics.endFill();
 
     // Do the outline
     const pulse = this.getPulse() * 2;
@@ -246,7 +252,6 @@ class GameState extends Phaser.State {
     this.track.sound.addMarker('loop', 40, 64);
     this.track.sound = this.track.sound.play('intro');
     this.track.sound.onMarkerComplete.add(() => {
-      console.log('looping');
       this.track.sound = this.track.sound.play('loop');
     });
     this.currentBeat = 0;
